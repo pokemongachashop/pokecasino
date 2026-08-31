@@ -644,6 +644,222 @@ main{
   font-size:13px;
 }
 
+/* ============================================================
+   SHARED: SECTION HEADINGS / STAT GRID / STATUS BADGES
+   ============================================================ */
+.section-heading{
+  font-family:var(--font-display);
+  font-size:16px;
+  font-weight:500;
+  margin-bottom:14px;
+}
+.stat-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+@media (min-width:520px){
+  .stat-grid{grid-template-columns:repeat(3,1fr);}
+}
+.stat-cell{
+  background:var(--bg-elevated);
+  border:1px solid var(--border-soft);
+  border-radius:var(--radius-md);
+  padding:12px;
+}
+.stat-cell .k{font-size:10px; letter-spacing:0.06em; color:var(--text-faint); margin-bottom:5px;}
+.stat-cell .v{font-size:16px; font-weight:600; color:var(--text);}
+.stat-cell .v.pos{color:var(--win);}
+.stat-cell .v.neg{color:var(--loss);}
+
+.status-badge{
+  display:inline-block;
+  font-size:10.5px;
+  letter-spacing:0.04em;
+  padding:3px 8px;
+  border-radius:20px;
+  border:1px solid var(--border);
+  color:var(--text-dim);
+}
+.status-badge.PENDING{color:var(--accent); border-color:rgba(199,164,104,0.35);}
+.status-badge.APPROVED,.status-badge.COMPLETED{color:var(--win); border-color:rgba(95,174,130,0.35);}
+.status-badge.REJECTED{color:var(--loss); border-color:rgba(176,101,95,0.35);}
+.status-badge.PROCESSING{color:var(--player); border-color:rgba(90,143,201,0.35);}
+
+/* ============================================================
+   WALLET
+   ============================================================ */
+.wallet-balance-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  margin-bottom:18px;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.wallet-balance-row .big{
+  font-family:var(--font-display);
+  font-size:30px;
+  color:var(--text);
+}
+.wallet-balance-row .sub{
+  font-size:11.5px;
+  color:var(--text-faint);
+  margin-top:4px;
+}
+.wallet-tabs{
+  display:flex;
+  gap:6px;
+  margin-bottom:14px;
+}
+.wallet-tab{
+  flex:1;
+  background:var(--bg-elevated);
+  border:1px solid var(--border);
+  color:var(--text-dim);
+  padding:10px;
+  border-radius:var(--radius-sm);
+  font-size:12.5px;
+}
+.wallet-tab.active{border-color:var(--accent-dim); color:var(--accent);}
+
+.form-field{margin-bottom:12px;}
+.form-field label{
+  display:block;
+  font-size:11px;
+  color:var(--text-faint);
+  margin-bottom:6px;
+  letter-spacing:0.03em;
+}
+.form-field input, .form-field select{
+  width:100%;
+  background:var(--bg-elevated);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  color:var(--text);
+  padding:11px 12px;
+  font-size:13.5px;
+}
+.form-field input:focus, .form-field select:focus{outline:none; border-color:var(--accent-dim);}
+.form-note{
+  font-size:11.5px;
+  color:var(--text-faint);
+  line-height:1.6;
+  margin:8px 0 14px;
+  padding:10px 12px;
+  background:var(--bg-elevated);
+  border-radius:var(--radius-sm);
+  border:1px solid var(--border-soft);
+}
+.submit-btn{
+  width:100%;
+  background:var(--accent);
+  color:#12130F;
+  border:none;
+  border-radius:var(--radius-md);
+  padding:12px;
+  font-size:13px;
+  font-weight:600;
+}
+.submit-btn:hover{filter:brightness(1.08);}
+.submit-btn:disabled{background:var(--surface-2); color:var(--text-faint); cursor:not-allowed;}
+
+.tx-list{display:flex; flex-direction:column; gap:1px; margin-top:6px;}
+.tx-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 2px;
+  border-bottom:1px solid var(--border-soft);
+  font-size:12.5px;
+  gap:10px;
+}
+.tx-row:last-child{border-bottom:none;}
+.tx-row .tx-main{display:flex; flex-direction:column; gap:2px;}
+.tx-row .tx-type{color:var(--text);}
+.tx-row .tx-date{color:var(--text-faint); font-size:10.5px;}
+.tx-row .tx-amt{font-weight:600;}
+.tx-row .tx-amt.pos{color:var(--win);}
+.tx-row .tx-amt.neg{color:var(--loss);}
+
+/* ============================================================
+   GAME HISTORY (personal)
+   ============================================================ */
+.history-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:11px 2px;
+  border-bottom:1px solid var(--border-soft);
+  font-size:12.5px;
+  gap:10px;
+}
+.history-row:last-child{border-bottom:none;}
+.history-row .h-left{display:flex; flex-direction:column; gap:3px;}
+.history-row .h-game{color:var(--text);}
+.history-row .h-bet{color:var(--text-faint); font-size:11px;}
+.history-row .h-profit{font-weight:600;}
+.history-row .h-profit.pos{color:var(--win);}
+.history-row .h-profit.neg{color:var(--loss);}
+
+/* ============================================================
+   ADMIN
+   ============================================================ */
+.admin-gate{
+  padding:50px 20px;
+  text-align:center;
+  color:var(--text-faint);
+  font-size:13px;
+}
+.admin-tabs{
+  display:flex;
+  gap:2px;
+  margin-bottom:16px;
+  overflow-x:auto;
+}
+.admin-tab{
+  background:none;
+  border:none;
+  color:var(--text-faint);
+  font-size:12px;
+  letter-spacing:0.03em;
+  padding:9px 12px;
+  border-bottom:2px solid transparent;
+  white-space:nowrap;
+}
+.admin-tab.active{color:var(--text); border-bottom-color:var(--accent);}
+
+.admin-table{width:100%; border-collapse:collapse; font-size:12.5px;}
+.admin-table th{
+  text-align:left;
+  color:var(--text-faint);
+  font-weight:500;
+  font-size:10.5px;
+  letter-spacing:0.05em;
+  padding:8px 6px;
+  border-bottom:1px solid var(--border);
+}
+.admin-table td{
+  padding:10px 6px;
+  border-bottom:1px solid var(--border-soft);
+  color:var(--text);
+}
+.admin-table .muted{color:var(--text-faint);}
+.admin-actions{display:flex; gap:6px;}
+.admin-btn{
+  border:1px solid var(--border);
+  background:var(--bg-elevated);
+  color:var(--text-dim);
+  padding:5px 10px;
+  border-radius:var(--radius-sm);
+  font-size:11px;
+}
+.admin-btn.approve{color:var(--win); border-color:rgba(95,174,130,0.35);}
+.admin-btn.reject{color:var(--loss); border-color:rgba(176,101,95,0.35);}
+.admin-btn:hover{filter:brightness(1.15);}
+.admin-empty{color:var(--text-faint); font-size:12.5px; padding:16px 4px;}
+.admin-table-wrap{overflow-x:auto;}
+
 /* setup notice */
 .setup-notice{
   background:var(--surface);
@@ -791,22 +1007,163 @@ main{
 
     <!-- ============ HISTORY VIEW (phase 2) ============ -->
     <div class="view" id="view-history">
-      <div class="panel"><div class="placeholder-view">게임 기록 페이지는 다음 단계에서 추가됩니다.</div></div>
+      <div class="panel">
+        <div class="section-heading">GAME HISTORY</div>
+        <div id="myHistoryList">
+          <div class="admin-empty">아직 참여한 게임이 없습니다</div>
+        </div>
+      </div>
     </div>
 
-    <!-- ============ WALLET VIEW (phase 2) ============ -->
+    <!-- ============ WALLET VIEW ============ -->
     <div class="view" id="view-wallet">
-      <div class="panel"><div class="placeholder-view">지갑(충전/환전) 페이지는 다음 단계에서 추가됩니다.</div></div>
+      <div class="panel">
+        <div class="wallet-balance-row">
+          <div>
+            <div class="section-heading" style="margin-bottom:2px;">WALLET</div>
+            <div class="sub" id="walletSub">가상 포인트는 실제 화폐가 아니며, Discord 서버 가상화폐를 관리자가 수동으로 매칭합니다.</div>
+          </div>
+        </div>
+        <div class="stat-grid" style="margin-bottom:18px;">
+          <div class="stat-cell">
+            <div class="k">AVAILABLE</div>
+            <div class="v num" id="walletAvailable">0 P</div>
+          </div>
+          <div class="stat-cell">
+            <div class="k">PENDING WITHDRAWAL</div>
+            <div class="v num" id="walletPending">0 P</div>
+          </div>
+        </div>
+
+        <div class="wallet-tabs">
+          <button class="wallet-tab active" data-tab="deposit">DEPOSIT</button>
+          <button class="wallet-tab" data-tab="withdraw">WITHDRAW</button>
+        </div>
+
+        <div id="walletTabDeposit">
+          <div class="form-note">
+            Discord 서버에서 관리자에게 가상화폐를 먼저 전달한 뒤, 아래에서 동일한 금액으로 충전을 신청하세요. 관리자가 확인 후 승인하면 잔액에 반영됩니다.
+          </div>
+          <div class="form-field">
+            <label>DEPOSIT AMOUNT (P)</label>
+            <input type="number" id="depositAmount" min="1" step="100" placeholder="10000">
+          </div>
+          <button class="submit-btn" id="depositSubmitBtn">신청하기</button>
+        </div>
+
+        <div id="walletTabWithdraw" style="display:none;">
+          <div class="form-note">
+            신청 즉시 해당 금액이 사용 가능 잔액에서 분리됩니다. 관리자가 Discord에서 가상화폐를 지급한 뒤 승인 처리하며, 거절 시 금액이 잔액으로 반환됩니다.
+          </div>
+          <div class="form-field">
+            <label>WITHDRAW AMOUNT (P)</label>
+            <input type="number" id="withdrawAmount" min="1" step="100" placeholder="10000">
+          </div>
+          <button class="submit-btn" id="withdrawSubmitBtn">신청하기</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-heading">DEPOSIT HISTORY</div>
+        <div id="depositHistoryList"><div class="admin-empty">신청 내역이 없습니다</div></div>
+      </div>
+
+      <div class="panel">
+        <div class="section-heading">WITHDRAWAL HISTORY</div>
+        <div id="withdrawHistoryList"><div class="admin-empty">신청 내역이 없습니다</div></div>
+      </div>
+
+      <div class="panel">
+        <div class="section-heading">TRANSACTION HISTORY</div>
+        <div id="txHistoryList" class="tx-list"><div class="admin-empty">거래 내역이 없습니다</div></div>
+      </div>
     </div>
 
-    <!-- ============ PROFILE VIEW (phase 2) ============ -->
+    <!-- ============ PROFILE VIEW ============ -->
     <div class="view" id="view-profile">
-      <div class="panel"><div class="placeholder-view">프로필/통계 페이지는 다음 단계에서 추가됩니다.</div></div>
+      <div class="panel">
+        <div class="section-heading" id="profileName">PLAYER</div>
+        <div class="stat-grid">
+          <div class="stat-cell"><div class="k">BALANCE</div><div class="v num" id="statBalance">0 P</div></div>
+          <div class="stat-cell"><div class="k">TOTAL BETS</div><div class="v num" id="statTotalBets">0</div></div>
+          <div class="stat-cell"><div class="k">TOTAL WAGERED</div><div class="v num" id="statWagered">0 P</div></div>
+          <div class="stat-cell"><div class="k">PLAYER WINS</div><div class="v num" id="statPlayerWins">0</div></div>
+          <div class="stat-cell"><div class="k">BANKER WINS</div><div class="v num" id="statBankerWins">0</div></div>
+          <div class="stat-cell"><div class="k">TIE WINS</div><div class="v num" id="statTieWins">0</div></div>
+          <div class="stat-cell"><div class="k">TOTAL PROFIT</div><div class="v num" id="statProfit">0 P</div></div>
+          <div class="stat-cell"><div class="k">CURRENT STREAK</div><div class="v num" id="statStreak">0</div></div>
+          <div class="stat-cell"><div class="k">BEST STREAK</div><div class="v num" id="statBestStreak">0</div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="section-heading">DISPLAY NAME</div>
+        <div class="form-field">
+          <input type="text" id="displayNameInput" maxlength="20" placeholder="닉네임 입력">
+        </div>
+        <button class="submit-btn" id="displayNameSaveBtn">저장</button>
+      </div>
     </div>
 
-    <!-- ============ ADMIN VIEW (phase 2) ============ -->
+    <!-- ============ ADMIN VIEW ============ -->
     <div class="view" id="view-admin">
-      <div class="panel"><div class="placeholder-view">관리자 페이지는 다음 단계에서 추가됩니다.</div></div>
+      <div class="panel" id="adminGatePanel" style="display:none;">
+        <div class="admin-gate">관리자 권한이 없습니다.</div>
+      </div>
+
+      <div id="adminContent">
+        <div class="panel">
+          <div class="admin-tabs">
+            <button class="admin-tab active" data-admintab="deposits">DEPOSITS</button>
+            <button class="admin-tab" data-admintab="withdrawals">WITHDRAWALS</button>
+            <button class="admin-tab" data-admintab="users">USERS</button>
+            <button class="admin-tab" data-admintab="games">GAMES</button>
+            <button class="admin-tab" data-admintab="settings">SETTINGS</button>
+          </div>
+
+          <div id="adminTabDeposits">
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead><tr><th>USER</th><th>AMOUNT</th><th>STATUS</th><th>DATE</th><th></th></tr></thead>
+                <tbody id="adminDepositsBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div id="adminTabWithdrawals" style="display:none;">
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead><tr><th>USER</th><th>AMOUNT</th><th>STATUS</th><th>DATE</th><th></th></tr></thead>
+                <tbody id="adminWithdrawalsBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div id="adminTabUsers" style="display:none;">
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead><tr><th>NAME</th><th>UID</th><th>BALANCE</th><th>WAGERED</th><th>PROFIT</th></tr></thead>
+                <tbody id="adminUsersBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div id="adminTabGames" style="display:none;">
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead><tr><th>GAME</th><th>PLAYER</th><th>BANKER</th><th>RESULT</th></tr></thead>
+                <tbody id="adminGamesBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div id="adminTabSettings" style="display:none;">
+            <div class="form-note">
+              설정 변경은 현재 읽기 전용으로 표시됩니다. 실제 값 변경은 GAME_SETTINGS 코드 상수 또는 Firestore의 설정 문서를 통해 이루어지도록 다음 단계에서 연결할 수 있습니다.
+            </div>
+            <div class="stat-grid" id="adminSettingsGrid"></div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- ============ SIDE COLUMN (desktop) ============ -->
@@ -1114,6 +1471,8 @@ function subscribeToUser(uid){
     const data = snap.data();
     State.balance = data.availableBalance ?? data.balance ?? 0;
     renderBalance();
+    renderWalletBalances(data);
+    renderProfileStats(data);
   });
 }
 
@@ -1742,6 +2101,462 @@ function startCountdownLoop(){
 }
 
 /* ================================================================
+   SECTION: WALLET (deposit / withdraw requests, transaction log)
+   Discord Bot과 직접 연동하지 않으므로 모든 요청은 관리자가
+   Admin 탭에서 수동으로 승인/거절합니다.
+   ================================================================ */
+function formatDate(ts){
+  if(!ts) return "–";
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  return `${d.getMonth()+1}/${d.getDate()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+}
+
+async function submitDepositRequest(){
+  const amount = parseInt(document.getElementById("depositAmount").value, 10);
+  if(!amount || amount <= 0){ showToast("올바른 충전 금액을 입력하세요."); return; }
+  try{
+    await db.collection("depositRequests").add({
+      uid: State.uid,
+      amount,
+      status: "PENDING",
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      processedAt: null,
+      processedBy: null
+    });
+    document.getElementById("depositAmount").value = "";
+    showToast("충전 신청이 접수되었습니다.");
+  }catch(err){
+    console.error(err);
+    showToast("충전 신청에 실패했습니다.");
+  }
+}
+
+async function submitWithdrawRequest(){
+  const amount = parseInt(document.getElementById("withdrawAmount").value, 10);
+  if(!amount || amount <= 0){ showToast("올바른 환전 금액을 입력하세요."); return; }
+
+  try{
+    await db.runTransaction(async (tx)=>{
+      const userRef = db.collection("users").doc(State.uid);
+      const userSnap = await tx.get(userRef);
+      const user = userSnap.data();
+      const available = user.availableBalance ?? user.balance ?? 0;
+      if(amount > available) throw new Error("사용 가능한 잔액이 부족합니다.");
+
+      const newAvailable = available - amount;
+      const newPending = (user.pendingWithdrawal || 0) + amount;
+
+      tx.update(userRef, {
+        availableBalance: newAvailable,
+        pendingWithdrawal: newPending
+      });
+
+      const reqRef = db.collection("withdrawRequests").doc();
+      tx.set(reqRef, {
+        uid: State.uid,
+        amount,
+        status: "PENDING",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        processedAt: null,
+        processedBy: null
+      });
+    });
+    document.getElementById("withdrawAmount").value = "";
+    showToast("환전 신청이 접수되었습니다.");
+  }catch(err){
+    console.error(err);
+    showToast(err.message || "환전 신청에 실패했습니다.");
+  }
+}
+
+function renderWalletBalances(userData){
+  document.getElementById("walletAvailable").textContent = formatPoints(userData.availableBalance ?? userData.balance ?? 0) + " P";
+  document.getElementById("walletPending").textContent = formatPoints(userData.pendingWithdrawal || 0) + " P";
+}
+
+function subscribeWalletLists(){
+  if(!State.uid) return;
+
+  db.collection("depositRequests").where("uid","==",State.uid)
+    .onSnapshot(snap=>{
+      const rows = [];
+      snap.forEach(d=> rows.push(d.data()));
+      rows.sort((a,b)=> (b.createdAt?.toMillis?.()||0) - (a.createdAt?.toMillis?.()||0));
+      renderRequestList("depositHistoryList", rows);
+    }, err=> console.warn("depositRequests listener:", err.message));
+
+  db.collection("withdrawRequests").where("uid","==",State.uid)
+    .onSnapshot(snap=>{
+      const rows = [];
+      snap.forEach(d=> rows.push(d.data()));
+      rows.sort((a,b)=> (b.createdAt?.toMillis?.()||0) - (a.createdAt?.toMillis?.()||0));
+      renderRequestList("withdrawHistoryList", rows);
+    }, err=> console.warn("withdrawRequests listener:", err.message));
+
+  db.collection("transactions").where("uid","==",State.uid)
+    .onSnapshot(snap=>{
+      const rows = [];
+      snap.forEach(d=> rows.push(d.data()));
+      rows.sort((a,b)=> (b.createdAt?.toMillis?.()||0) - (a.createdAt?.toMillis?.()||0));
+      renderTxList(rows.slice(0,30));
+    }, err=> console.warn("transactions listener:", err.message));
+}
+
+function renderRequestList(containerId, rows){
+  const el = document.getElementById(containerId);
+  if(!rows.length){ el.innerHTML = `<div class="admin-empty">신청 내역이 없습니다</div>`; return; }
+  el.innerHTML = rows.map(r=>`
+    <div class="history-row">
+      <div class="h-left">
+        <span class="h-game num">${formatPoints(r.amount)} P</span>
+        <span class="h-bet">${formatDate(r.createdAt)}</span>
+      </div>
+      <span class="status-badge ${r.status}">${r.status}</span>
+    </div>
+  `).join("");
+}
+
+function renderTxList(rows){
+  const el = document.getElementById("txHistoryList");
+  if(!rows.length){ el.innerHTML = `<div class="admin-empty">거래 내역이 없습니다</div>`; return; }
+  const typeLabel = { BET:"베팅", GAME_SETTLEMENT:"정산", DEPOSIT:"충전", WITHDRAW:"환전" };
+  el.innerHTML = rows.map(t=>{
+    const pos = t.amount >= 0;
+    return `
+      <div class="tx-row">
+        <div class="tx-main">
+          <span class="tx-type">${typeLabel[t.type] || t.type}</span>
+          <span class="tx-date">${formatDate(t.createdAt)}</span>
+        </div>
+        <span class="tx-amt num ${pos?"pos":"neg"}">${pos?"+":""}${formatPoints(t.amount)} P</span>
+      </div>`;
+  }).join("");
+}
+
+function bindWalletEvents(){
+  document.querySelectorAll(".wallet-tab").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      document.querySelectorAll(".wallet-tab").forEach(b=> b.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById("walletTabDeposit").style.display = btn.dataset.tab === "deposit" ? "block" : "none";
+      document.getElementById("walletTabWithdraw").style.display = btn.dataset.tab === "withdraw" ? "block" : "none";
+    });
+  });
+  document.getElementById("depositSubmitBtn").addEventListener("click", submitDepositRequest);
+  document.getElementById("withdrawSubmitBtn").addEventListener("click", submitWithdrawRequest);
+}
+
+/* ================================================================
+   SECTION: PROFILE (stats + personal game history + display name)
+   ================================================================ */
+function renderProfileStats(userData){
+  document.getElementById("profileName").textContent = userData.displayName || "PLAYER";
+  document.getElementById("statBalance").textContent = formatPoints(userData.availableBalance ?? userData.balance ?? 0) + " P";
+  document.getElementById("statTotalBets").textContent = formatPoints(userData.totalBets || 0);
+  document.getElementById("statWagered").textContent = formatPoints(userData.totalWagered || 0) + " P";
+  document.getElementById("statPlayerWins").textContent = formatPoints(userData.playerWins || 0);
+  document.getElementById("statBankerWins").textContent = formatPoints(userData.bankerWins || 0);
+  document.getElementById("statTieWins").textContent = formatPoints(userData.tieWins || 0);
+  const profitEl = document.getElementById("statProfit");
+  const profit = userData.totalProfit || 0;
+  profitEl.textContent = (profit>=0?"+":"") + formatPoints(profit) + " P";
+  profitEl.className = "v num " + (profit>=0 ? "pos" : "neg");
+  document.getElementById("statStreak").textContent = formatPoints(userData.currentStreak || 0);
+  document.getElementById("statBestStreak").textContent = formatPoints(userData.bestStreak || 0);
+  const nameInput = document.getElementById("displayNameInput");
+  if(document.activeElement !== nameInput) nameInput.value = userData.displayName || "";
+}
+
+async function saveDisplayName(){
+  const val = document.getElementById("displayNameInput").value.trim();
+  if(!val){ showToast("닉네임을 입력하세요."); return; }
+  if(val.length > 20){ showToast("닉네임은 20자 이내로 입력하세요."); return; }
+  try{
+    await db.collection("users").doc(State.uid).update({ displayName: val });
+    showToast("닉네임이 저장되었습니다.");
+  }catch(err){
+    console.error(err);
+    showToast("닉네임 저장에 실패했습니다.");
+  }
+}
+
+function subscribeMyGameBets(){
+  if(!State.uid) return;
+  // 내가 베팅에 참여한 게임들의 개인 기록은 각 게임의 bets 서브컬렉션이
+  // 아닌, 정산 시 남긴 transactions(type=GAME_SETTLEMENT)를 기준으로 표시한다.
+  db.collection("transactions")
+    .where("uid","==",State.uid)
+    .where("type","==","GAME_SETTLEMENT")
+    .onSnapshot(snap=>{
+      const rows = [];
+      snap.forEach(d=> rows.push(d.data()));
+      rows.sort((a,b)=> (b.createdAt?.toMillis?.()||0) - (a.createdAt?.toMillis?.()||0));
+      renderMyHistory(rows.slice(0,30));
+    }, err=> console.warn("my game history listener:", err.message));
+}
+
+function renderMyHistory(rows){
+  const el = document.getElementById("myHistoryList");
+  if(!rows.length){ el.innerHTML = `<div class="admin-empty">아직 참여한 게임이 없습니다</div>`; return; }
+  el.innerHTML = rows.map(r=>{
+    const profit = r.amount;
+    return `
+    <div class="history-row">
+      <div class="h-left">
+        <span class="h-game">GAME #${String(r.gameId).padStart(6,"0")}</span>
+        <span class="h-bet">${r.side} · ${r.result}</span>
+      </div>
+      <span class="h-profit num ${profit>=0?"pos":"neg"}">${profit>=0?"+":""}${formatPoints(profit)} P</span>
+    </div>`;
+  }).join("");
+}
+
+/* ================================================================
+   SECTION: ADMIN
+   클라이언트에서는 ADMIN_UIDS로 화면만 숨깁니다. 실제 쓰기 권한은
+   Firestore Security Rules에서 admin 목록을 검증해야 합니다
+   (phase 3: firestore.rules 참고).
+   ================================================================ */
+function isAdminUser(){
+  return State.uid && ADMIN_UIDS.includes(State.uid);
+}
+
+function initAdminPanel(){
+  const gate = document.getElementById("adminGatePanel");
+  const content = document.getElementById("adminContent");
+  if(!isAdminUser()){
+    gate.style.display = "block";
+    content.style.display = "none";
+    return;
+  }
+  gate.style.display = "none";
+  content.style.display = "block";
+
+  db.collection("depositRequests").orderBy("createdAt","desc").limit(50)
+    .onSnapshot(snap=>{
+      const rows = []; snap.forEach(d=> rows.push({ id:d.id, ...d.data() }));
+      renderAdminDeposits(rows);
+    }, err=> console.warn("admin deposits:", err.message));
+
+  db.collection("withdrawRequests").orderBy("createdAt","desc").limit(50)
+    .onSnapshot(snap=>{
+      const rows = []; snap.forEach(d=> rows.push({ id:d.id, ...d.data() }));
+      renderAdminWithdrawals(rows);
+    }, err=> console.warn("admin withdrawals:", err.message));
+
+  db.collection("users").limit(100)
+    .onSnapshot(snap=>{
+      const rows = []; snap.forEach(d=> rows.push({ id:d.id, ...d.data() }));
+      renderAdminUsers(rows);
+    }, err=> console.warn("admin users:", err.message));
+
+  db.collection("gameHistory").orderBy("gameId","desc").limit(30)
+    .onSnapshot(snap=>{
+      const rows = []; snap.forEach(d=> rows.push(d.data()));
+      renderAdminGames(rows);
+    }, err=> console.warn("admin games:", err.message));
+
+  renderAdminSettings();
+}
+
+function userLabel(uidOrRow){
+  return (uidOrRow || "").toString().slice(0,10) + "…";
+}
+
+function renderAdminDeposits(rows){
+  const body = document.getElementById("adminDepositsBody");
+  if(!rows.length){ body.innerHTML = `<tr><td colspan="5" class="admin-empty">신청 내역이 없습니다</td></tr>`; return; }
+  body.innerHTML = rows.map(r=>`
+    <tr>
+      <td class="muted">${userLabel(r.uid)}</td>
+      <td class="num">${formatPoints(r.amount)} P</td>
+      <td><span class="status-badge ${r.status}">${r.status}</span></td>
+      <td class="muted">${formatDate(r.createdAt)}</td>
+      <td>
+        ${r.status === "PENDING" ? `
+          <div class="admin-actions">
+            <button class="admin-btn approve" data-approve-deposit="${r.id}">승인</button>
+            <button class="admin-btn reject" data-reject-deposit="${r.id}">거절</button>
+          </div>` : ""}
+      </td>
+    </tr>
+  `).join("");
+
+  body.querySelectorAll("[data-approve-deposit]").forEach(btn=>
+    btn.addEventListener("click", ()=> processDepositRequest(btn.dataset.approveDeposit, "APPROVED")));
+  body.querySelectorAll("[data-reject-deposit]").forEach(btn=>
+    btn.addEventListener("click", ()=> processDepositRequest(btn.dataset.rejectDeposit, "REJECTED")));
+}
+
+async function processDepositRequest(requestId, decision){
+  try{
+    await db.runTransaction(async (tx)=>{
+      const reqRef = db.collection("depositRequests").doc(requestId);
+      const reqSnap = await tx.get(reqRef);
+      const reqData = reqSnap.data();
+      if(!reqData || reqData.status !== "PENDING") return; // 중복 처리 방지
+
+      tx.update(reqRef, {
+        status: decision,
+        processedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        processedBy: State.uid
+      });
+
+      if(decision === "APPROVED"){
+        const userRef = db.collection("users").doc(reqData.uid);
+        const userSnap = await tx.get(userRef);
+        const user = userSnap.data();
+        const before = user.availableBalance ?? user.balance ?? 0;
+        const after = before + reqData.amount;
+        tx.update(userRef, { balance: after, availableBalance: after });
+
+        const txnRef = db.collection("transactions").doc();
+        tx.set(txnRef, {
+          uid: reqData.uid, type: "DEPOSIT", amount: reqData.amount,
+          balanceBefore: before, balanceAfter: after,
+          referenceId: requestId,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      }
+    });
+    showToast(decision === "APPROVED" ? "충전을 승인했습니다." : "충전을 거절했습니다.");
+  }catch(err){
+    console.error(err);
+    showToast("처리에 실패했습니다.");
+  }
+}
+
+function renderAdminWithdrawals(rows){
+  const body = document.getElementById("adminWithdrawalsBody");
+  if(!rows.length){ body.innerHTML = `<tr><td colspan="5" class="admin-empty">신청 내역이 없습니다</td></tr>`; return; }
+  body.innerHTML = rows.map(r=>`
+    <tr>
+      <td class="muted">${userLabel(r.uid)}</td>
+      <td class="num">${formatPoints(r.amount)} P</td>
+      <td><span class="status-badge ${r.status}">${r.status}</span></td>
+      <td class="muted">${formatDate(r.createdAt)}</td>
+      <td>
+        ${r.status === "PENDING" ? `
+          <div class="admin-actions">
+            <button class="admin-btn approve" data-approve-withdraw="${r.id}">승인</button>
+            <button class="admin-btn reject" data-reject-withdraw="${r.id}">거절</button>
+          </div>` : ""}
+      </td>
+    </tr>
+  `).join("");
+
+  body.querySelectorAll("[data-approve-withdraw]").forEach(btn=>
+    btn.addEventListener("click", ()=> processWithdrawRequest(btn.dataset.approveWithdraw, "COMPLETED")));
+  body.querySelectorAll("[data-reject-withdraw]").forEach(btn=>
+    btn.addEventListener("click", ()=> processWithdrawRequest(btn.dataset.rejectWithdraw, "REJECTED")));
+}
+
+async function processWithdrawRequest(requestId, decision){
+  try{
+    await db.runTransaction(async (tx)=>{
+      const reqRef = db.collection("withdrawRequests").doc(requestId);
+      const reqSnap = await tx.get(reqRef);
+      const reqData = reqSnap.data();
+      if(!reqData || reqData.status !== "PENDING") return;
+
+      const userRef = db.collection("users").doc(reqData.uid);
+      const userSnap = await tx.get(userRef);
+      const user = userSnap.data();
+      const pending = (user.pendingWithdrawal || 0) - reqData.amount;
+
+      tx.update(reqRef, {
+        status: decision,
+        processedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        processedBy: State.uid
+      });
+
+      if(decision === "REJECTED"){
+        // 잠긴 금액을 사용 가능 잔액으로 반환
+        const before = user.availableBalance ?? user.balance ?? 0;
+        const after = before + reqData.amount;
+        tx.update(userRef, {
+          balance: after,
+          availableBalance: after,
+          pendingWithdrawal: Math.max(0, pending)
+        });
+      }else{
+        // COMPLETED: 이미 분리되어 있던 pending 금액을 확정 차감
+        tx.update(userRef, { pendingWithdrawal: Math.max(0, pending) });
+        const txnRef = db.collection("transactions").doc();
+        tx.set(txnRef, {
+          uid: reqData.uid, type: "WITHDRAW", amount: -reqData.amount,
+          balanceBefore: user.availableBalance ?? user.balance ?? 0,
+          balanceAfter: user.availableBalance ?? user.balance ?? 0,
+          referenceId: requestId,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      }
+    });
+    showToast(decision === "COMPLETED" ? "환전을 완료 처리했습니다." : "환전을 거절했습니다.");
+  }catch(err){
+    console.error(err);
+    showToast("처리에 실패했습니다.");
+  }
+}
+
+function renderAdminUsers(rows){
+  const body = document.getElementById("adminUsersBody");
+  if(!rows.length){ body.innerHTML = `<tr><td colspan="5" class="admin-empty">사용자가 없습니다</td></tr>`; return; }
+  body.innerHTML = rows.map(u=>`
+    <tr>
+      <td>${u.displayName || "–"}</td>
+      <td class="muted">${userLabel(u.id)}</td>
+      <td class="num">${formatPoints(u.availableBalance ?? u.balance ?? 0)} P</td>
+      <td class="num">${formatPoints(u.totalWagered || 0)} P</td>
+      <td class="num">${formatPoints(u.totalProfit || 0)} P</td>
+    </tr>
+  `).join("");
+}
+
+function renderAdminGames(rows){
+  const body = document.getElementById("adminGamesBody");
+  if(!rows.length){ body.innerHTML = `<tr><td colspan="4" class="admin-empty">게임 기록이 없습니다</td></tr>`; return; }
+  body.innerHTML = rows.map(g=>`
+    <tr>
+      <td>#${String(g.gameId).padStart(6,"0")}</td>
+      <td class="num">${g.playerScore}</td>
+      <td class="num">${g.bankerScore}</td>
+      <td>${g.result}${g.isNatural ? " (N)" : ""}</td>
+    </tr>
+  `).join("");
+}
+
+function renderAdminSettings(){
+  const grid = document.getElementById("adminSettingsGrid");
+  const entries = [
+    ["GAME INTERVAL", GAME_SETTINGS.gameIntervalSeconds + "s"],
+    ["BETTING TIME", GAME_SETTINGS.bettingSeconds + "s"],
+    ["MIN BET", formatPoints(GAME_SETTINGS.minBet) + " P"],
+    ["MAX BET", formatPoints(GAME_SETTINGS.maxBet) + " P"],
+    ["STARTING BALANCE", formatPoints(GAME_SETTINGS.startingBalance) + " P"],
+    ["PLAYER PAYOUT", "1 : " + GAME_SETTINGS.playerPayout],
+    ["BANKER PAYOUT", "1 : " + GAME_SETTINGS.bankerPayout],
+    ["TIE PAYOUT", "1 : " + GAME_SETTINGS.tiePayout]
+  ];
+  grid.innerHTML = entries.map(([k,v])=>`
+    <div class="stat-cell"><div class="k">${k}</div><div class="v">${v}</div></div>
+  `).join("");
+}
+
+function bindAdminEvents(){
+  document.querySelectorAll(".admin-tab").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      document.querySelectorAll(".admin-tab").forEach(b=> b.classList.remove("active"));
+      btn.classList.add("active");
+      ["deposits","withdrawals","users","games","settings"].forEach(tab=>{
+        document.getElementById("adminTab" + tab.charAt(0).toUpperCase()+tab.slice(1))
+          .style.display = (tab === btn.dataset.admintab) ? "block" : "none";
+      });
+    });
+  });
+}
+
+/* ================================================================
    SECTION: UI — STATIC SETUP (chips, side buttons, nav)
    ================================================================ */
 function buildChipRow(){
@@ -1775,6 +2590,11 @@ function bindStaticEvents(){
       document.getElementById("view-" + btn.dataset.view).classList.add("active");
     });
   });
+
+  document.getElementById("displayNameSaveBtn").addEventListener("click", saveDisplayName);
+
+  bindWalletEvents();
+  bindAdminEvents();
 }
 
 /* ================================================================
@@ -1798,6 +2618,9 @@ function boot(){
     subscribeToGame();
     subscribeToMyBet();
     subscribeToHistory();
+    subscribeWalletLists();
+    subscribeMyGameBets();
+    initAdminPanel();
   });
 }
 
