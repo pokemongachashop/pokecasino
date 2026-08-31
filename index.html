@@ -891,7 +891,7 @@ main{
         <path d="M12 6.5 L15.5 12 L12 17.5 L8.5 12 Z" stroke="#C7A468" stroke-width="1.2" fill="none"/>
       </svg>
       <span class="brand-name">Poké Baccarat</span>
-      <span class="brand-sub" id="tableLabel">TABLE 01</span>
+      <span class="brand-sub" id="tableLabel">테이블 01</span>
     </div>
     <div class="header-right">
       <div class="online-pill">
@@ -899,18 +899,18 @@ main{
         <span id="onlineCount">–</span>
       </div>
       <div class="balance-pill">
-        <span class="label">BALANCE</span>
+        <span class="label">잔액</span>
         <span class="value" id="balanceValue">– <span class="unit">P</span></span>
       </div>
     </div>
   </header>
 
   <nav class="nav-menu">
-    <button class="nav-item active" data-view="game">GAME</button>
-    <button class="nav-item" data-view="history">HISTORY</button>
-    <button class="nav-item" data-view="wallet">WALLET</button>
-    <button class="nav-item" data-view="profile">PROFILE</button>
-    <button class="nav-item" data-view="admin" id="navAdmin" hidden>ADMIN</button>
+    <button class="nav-item active" data-view="game">게임</button>
+    <button class="nav-item" data-view="history">기록</button>
+    <button class="nav-item" data-view="wallet">지갑</button>
+    <button class="nav-item" data-view="profile">프로필</button>
+    <button class="nav-item" data-view="admin" id="navAdmin" hidden>관리자</button>
   </nav>
 
   <main>
@@ -923,7 +923,7 @@ main{
 
       <div class="panel">
         <div class="status-bar">
-          <div class="game-id">GAME <span class="num" id="gameIdLabel">#000000</span></div>
+          <div class="game-id">게임 <span class="num" id="gameIdLabel">#000000</span></div>
           <div class="phase-block">
             <span class="phase-label" id="phaseLabel">–</span>
             <span class="countdown num" id="countdownLabel">00:00</span>
@@ -933,13 +933,13 @@ main{
         <div class="table-wrap">
           <div class="hands">
             <div class="hand">
-              <span class="hand-label player">PLAYER</span>
+              <span class="hand-label player">플레이어</span>
               <div class="card-row" id="playerCards"></div>
               <div class="score player" id="playerScore"><span class="score-placeholder">–</span></div>
             </div>
             <div class="vs-divider">VS</div>
             <div class="hand">
-              <span class="hand-label banker">BANKER</span>
+              <span class="hand-label banker">뱅커</span>
               <div class="card-row" id="bankerCards"></div>
               <div class="score banker" id="bankerScore"><span class="score-placeholder">–</span></div>
             </div>
@@ -947,20 +947,20 @@ main{
 
           <div class="result-banner" id="resultBanner">
             <div class="label" id="resultLabel"></div>
-            <div class="natural" id="resultNatural" style="display:none;">NATURAL</div>
+            <div class="natural" id="resultNatural" style="display:none;">내추럴</div>
           </div>
 
           <div class="bet-totals">
             <div class="bet-total-cell player">
-              <div class="k">PLAYER</div>
+              <div class="k">플레이어</div>
               <div class="v num" id="totalPlayer">0 P</div>
             </div>
             <div class="bet-total-cell banker">
-              <div class="k">BANKER</div>
+              <div class="k">뱅커</div>
               <div class="v num" id="totalBanker">0 P</div>
             </div>
             <div class="bet-total-cell tie">
-              <div class="k">TIE</div>
+              <div class="k">타이</div>
               <div class="v num" id="totalTie">0 P</div>
             </div>
           </div>
@@ -968,19 +968,19 @@ main{
       </div>
 
       <div class="panel" id="bettingPanel">
-        <div class="panel-title">PLACE YOUR BET</div>
+        <div class="panel-title">베팅하기</div>
 
         <div class="bet-choices">
           <button class="bet-choice player" data-side="PLAYER">
-            <div class="name">PLAYER</div>
+            <div class="name">플레이어</div>
             <div class="payout">1 : 1</div>
           </button>
           <button class="bet-choice banker" data-side="BANKER">
-            <div class="name">BANKER</div>
+            <div class="name">뱅커</div>
             <div class="payout">1 : 1</div>
           </button>
           <button class="bet-choice tie" data-side="TIE">
-            <div class="name">TIE</div>
+            <div class="name">타이</div>
             <div class="payout">8 : 1</div>
           </button>
         </div>
@@ -993,12 +993,12 @@ main{
 
         <div class="my-bet-row" id="myBetRow"></div>
 
-        <button class="confirm-btn" id="confirmBtn" disabled>CONFIRM BET</button>
+        <button class="confirm-btn" id="confirmBtn" disabled>베팅 확정</button>
         <div class="closed-note" id="closedNote" style="display:none;">이번 라운드 베팅이 마감되었습니다</div>
       </div>
 
       <div class="panel side-col-only-mobile" id="recentPanel">
-        <div class="panel-title">RECENT GAMES</div>
+        <div class="panel-title">최근 게임</div>
         <div class="recent-list" id="recentList">
           <div class="recent-empty">아직 게임 기록이 없습니다</div>
         </div>
@@ -1008,7 +1008,7 @@ main{
     <!-- ============ HISTORY VIEW (phase 2) ============ -->
     <div class="view" id="view-history">
       <div class="panel">
-        <div class="section-heading">GAME HISTORY</div>
+        <div class="section-heading">게임 기록</div>
         <div id="myHistoryList">
           <div class="admin-empty">아직 참여한 게임이 없습니다</div>
         </div>
@@ -1020,24 +1020,24 @@ main{
       <div class="panel">
         <div class="wallet-balance-row">
           <div>
-            <div class="section-heading" style="margin-bottom:2px;">WALLET</div>
+            <div class="section-heading" style="margin-bottom:2px;">지갑</div>
             <div class="sub" id="walletSub">가상 포인트는 실제 화폐가 아니며, Discord 서버 가상화폐를 관리자가 수동으로 매칭합니다.</div>
           </div>
         </div>
         <div class="stat-grid" style="margin-bottom:18px;">
           <div class="stat-cell">
-            <div class="k">AVAILABLE</div>
+            <div class="k">사용 가능 잔액</div>
             <div class="v num" id="walletAvailable">0 P</div>
           </div>
           <div class="stat-cell">
-            <div class="k">PENDING WITHDRAWAL</div>
+            <div class="k">환전 대기중</div>
             <div class="v num" id="walletPending">0 P</div>
           </div>
         </div>
 
         <div class="wallet-tabs">
-          <button class="wallet-tab active" data-tab="deposit">DEPOSIT</button>
-          <button class="wallet-tab" data-tab="withdraw">WITHDRAW</button>
+          <button class="wallet-tab active" data-tab="deposit">충전</button>
+          <button class="wallet-tab" data-tab="withdraw">환전</button>
         </div>
 
         <div id="walletTabDeposit">
@@ -1045,7 +1045,7 @@ main{
             Discord 서버에서 관리자에게 가상화폐를 먼저 전달한 뒤, 아래에서 동일한 금액으로 충전을 신청하세요. 관리자가 확인 후 승인하면 잔액에 반영됩니다.
           </div>
           <div class="form-field">
-            <label>DEPOSIT AMOUNT (P)</label>
+            <label>충전 금액 (P)</label>
             <input type="number" id="depositAmount" min="1" step="100" placeholder="10000">
           </div>
           <button class="submit-btn" id="depositSubmitBtn">신청하기</button>
@@ -1056,7 +1056,7 @@ main{
             신청 즉시 해당 금액이 사용 가능 잔액에서 분리됩니다. 관리자가 Discord에서 가상화폐를 지급한 뒤 승인 처리하며, 거절 시 금액이 잔액으로 반환됩니다.
           </div>
           <div class="form-field">
-            <label>WITHDRAW AMOUNT (P)</label>
+            <label>환전 금액 (P)</label>
             <input type="number" id="withdrawAmount" min="1" step="100" placeholder="10000">
           </div>
           <button class="submit-btn" id="withdrawSubmitBtn">신청하기</button>
@@ -1064,17 +1064,17 @@ main{
       </div>
 
       <div class="panel">
-        <div class="section-heading">DEPOSIT HISTORY</div>
+        <div class="section-heading">충전 내역</div>
         <div id="depositHistoryList"><div class="admin-empty">신청 내역이 없습니다</div></div>
       </div>
 
       <div class="panel">
-        <div class="section-heading">WITHDRAWAL HISTORY</div>
+        <div class="section-heading">환전 내역</div>
         <div id="withdrawHistoryList"><div class="admin-empty">신청 내역이 없습니다</div></div>
       </div>
 
       <div class="panel">
-        <div class="section-heading">TRANSACTION HISTORY</div>
+        <div class="section-heading">거래 내역</div>
         <div id="txHistoryList" class="tx-list"><div class="admin-empty">거래 내역이 없습니다</div></div>
       </div>
     </div>
@@ -1082,21 +1082,21 @@ main{
     <!-- ============ PROFILE VIEW ============ -->
     <div class="view" id="view-profile">
       <div class="panel">
-        <div class="section-heading" id="profileName">PLAYER</div>
+        <div class="section-heading" id="profileName">플레이어</div>
         <div class="stat-grid">
-          <div class="stat-cell"><div class="k">BALANCE</div><div class="v num" id="statBalance">0 P</div></div>
-          <div class="stat-cell"><div class="k">TOTAL BETS</div><div class="v num" id="statTotalBets">0</div></div>
-          <div class="stat-cell"><div class="k">TOTAL WAGERED</div><div class="v num" id="statWagered">0 P</div></div>
-          <div class="stat-cell"><div class="k">PLAYER WINS</div><div class="v num" id="statPlayerWins">0</div></div>
-          <div class="stat-cell"><div class="k">BANKER WINS</div><div class="v num" id="statBankerWins">0</div></div>
-          <div class="stat-cell"><div class="k">TIE WINS</div><div class="v num" id="statTieWins">0</div></div>
-          <div class="stat-cell"><div class="k">TOTAL PROFIT</div><div class="v num" id="statProfit">0 P</div></div>
-          <div class="stat-cell"><div class="k">CURRENT STREAK</div><div class="v num" id="statStreak">0</div></div>
-          <div class="stat-cell"><div class="k">BEST STREAK</div><div class="v num" id="statBestStreak">0</div></div>
+          <div class="stat-cell"><div class="k">잔액</div><div class="v num" id="statBalance">0 P</div></div>
+          <div class="stat-cell"><div class="k">총 베팅 횟수</div><div class="v num" id="statTotalBets">0</div></div>
+          <div class="stat-cell"><div class="k">총 베팅 금액</div><div class="v num" id="statWagered">0 P</div></div>
+          <div class="stat-cell"><div class="k">플레이어 승</div><div class="v num" id="statPlayerWins">0</div></div>
+          <div class="stat-cell"><div class="k">뱅커 승</div><div class="v num" id="statBankerWins">0</div></div>
+          <div class="stat-cell"><div class="k">타이 승</div><div class="v num" id="statTieWins">0</div></div>
+          <div class="stat-cell"><div class="k">총 수익</div><div class="v num" id="statProfit">0 P</div></div>
+          <div class="stat-cell"><div class="k">현재 연승</div><div class="v num" id="statStreak">0</div></div>
+          <div class="stat-cell"><div class="k">최고 연승</div><div class="v num" id="statBestStreak">0</div></div>
         </div>
       </div>
       <div class="panel">
-        <div class="section-heading">DISPLAY NAME</div>
+        <div class="section-heading">닉네임</div>
         <div class="form-field">
           <input type="text" id="displayNameInput" maxlength="20" placeholder="닉네임 입력">
         </div>
@@ -1113,17 +1113,17 @@ main{
       <div id="adminContent">
         <div class="panel">
           <div class="admin-tabs">
-            <button class="admin-tab active" data-admintab="deposits">DEPOSITS</button>
-            <button class="admin-tab" data-admintab="withdrawals">WITHDRAWALS</button>
-            <button class="admin-tab" data-admintab="users">USERS</button>
-            <button class="admin-tab" data-admintab="games">GAMES</button>
-            <button class="admin-tab" data-admintab="settings">SETTINGS</button>
+            <button class="admin-tab active" data-admintab="deposits">충전 신청</button>
+            <button class="admin-tab" data-admintab="withdrawals">환전 신청</button>
+            <button class="admin-tab" data-admintab="users">사용자</button>
+            <button class="admin-tab" data-admintab="games">게임 기록</button>
+            <button class="admin-tab" data-admintab="settings">설정</button>
           </div>
 
           <div id="adminTabDeposits">
             <div class="admin-table-wrap">
               <table class="admin-table">
-                <thead><tr><th>USER</th><th>AMOUNT</th><th>STATUS</th><th>DATE</th><th></th></tr></thead>
+                <thead><tr><th>사용자</th><th>금액</th><th>상태</th><th>날짜</th><th></th></tr></thead>
                 <tbody id="adminDepositsBody"></tbody>
               </table>
             </div>
@@ -1132,7 +1132,7 @@ main{
           <div id="adminTabWithdrawals" style="display:none;">
             <div class="admin-table-wrap">
               <table class="admin-table">
-                <thead><tr><th>USER</th><th>AMOUNT</th><th>STATUS</th><th>DATE</th><th></th></tr></thead>
+                <thead><tr><th>사용자</th><th>금액</th><th>상태</th><th>날짜</th><th></th></tr></thead>
                 <tbody id="adminWithdrawalsBody"></tbody>
               </table>
             </div>
@@ -1141,7 +1141,7 @@ main{
           <div id="adminTabUsers" style="display:none;">
             <div class="admin-table-wrap">
               <table class="admin-table">
-                <thead><tr><th>NAME</th><th>UID</th><th>BALANCE</th><th>WAGERED</th><th>PROFIT</th></tr></thead>
+                <thead><tr><th>이름</th><th>UID</th><th>잔액</th><th>베팅액</th><th>수익</th></tr></thead>
                 <tbody id="adminUsersBody"></tbody>
               </table>
             </div>
@@ -1150,7 +1150,7 @@ main{
           <div id="adminTabGames" style="display:none;">
             <div class="admin-table-wrap">
               <table class="admin-table">
-                <thead><tr><th>GAME</th><th>PLAYER</th><th>BANKER</th><th>RESULT</th></tr></thead>
+                <thead><tr><th>게임</th><th>플레이어</th><th>뱅커</th><th>결과</th></tr></thead>
                 <tbody id="adminGamesBody"></tbody>
               </table>
             </div>
@@ -1169,11 +1169,11 @@ main{
     <!-- ============ SIDE COLUMN (desktop) ============ -->
     <div class="side-col">
       <div class="panel">
-        <div class="panel-title">MY BET</div>
+        <div class="panel-title">내 베팅</div>
         <div id="sideMyBet" style="font-size:13px; color:var(--text-dim);">이번 라운드에 베팅하지 않았습니다</div>
       </div>
       <div class="panel">
-        <div class="panel-title">RECENT GAMES</div>
+        <div class="panel-title">최근 게임</div>
         <div class="recent-list" id="recentListDesktop">
           <div class="recent-empty">아직 게임 기록이 없습니다</div>
         </div>
@@ -1199,13 +1199,20 @@ main{
    이전하여 런타임에 변경할 수 있도록 확장할 예정.
    ================================================================ */
 const firebaseConfig = {
-  apiKey: "AIzaSyBdxOeQfCkqisBWLkeXr5E0fx0sgRPuqpo",
-  authDomain: "pokecasino-b1b7a.firebaseapp.com",
-  databaseURL: "https://pokecasino-b1b7a-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "pokecasino-b1b7a",
-  storageBucket: "pokecasino-b1b7a.firebasestorage.app",
-  messagingSenderId: "831915142943",
-  appId: "1:831915142943:web:53b911881815bffb320a2a"
+  apiKey:"AIzaSyBdxOeQfCkqisBWLkeXr5E0fx0sgRPuqpo",
+
+  authDomain:"pokecasino-b1b7a.firebaseapp.com",
+
+  databaseURL:"https://pokecasino-b1b7a-default-rtdb.asia-southeast1.firebasedatabase.app",
+
+  projectId:"pokecasino-b1b7a",
+
+  storageBucket:"pokecasino-b1b7a.firebasestorage.app",
+
+  messagingSenderId:"831915142943",
+
+  appId:"1:831915142943:web:53b911881815bffb320a2a"
+
 };
 
 const GAME_SETTINGS = {
@@ -1301,6 +1308,13 @@ const State = {
 /* ================================================================
    SECTION: UTILITIES
    ================================================================ */
+
+// 내부 데이터 값(PLAYER/BANKER/TIE, 상태 코드 등)은 영어 그대로 유지하고,
+// 화면에 표시할 때만 한글로 변환한다 (CSS 클래스/DB 값과 분리).
+const SIDE_LABEL_KO = { PLAYER: "플레이어", BANKER: "뱅커", TIE: "타이" };
+const STATUS_LABEL_KO = { PENDING: "대기중", APPROVED: "승인됨", REJECTED: "거절됨", COMPLETED: "완료", PROCESSING: "처리중" };
+const PHASE_LABEL_KO = { BETTING: "베팅", BETTING_CLOSED: "베팅 마감", DEALING: "카드 공개", RESULT: "결과" };
+
 function formatPoints(n){
   return Number(n || 0).toLocaleString("en-US");
 }
@@ -1867,7 +1881,7 @@ async function confirmBet(){
       });
     });
 
-    showToast(`${side}에 ${formatPoints(amount)} P 베팅했습니다.`);
+    showToast(`${SIDE_LABEL_KO[side] || side}에 ${formatPoints(amount)} P 베팅했습니다.`);
     State.selectedSide = null;
     State.selectedAmount = null;
     document.getElementById("customAmount").value = "";
@@ -1887,7 +1901,7 @@ function renderBalance(){
 }
 
 function renderOnlineCount(){
-  document.getElementById("onlineCount").textContent = `${State.onlineCount} ONLINE`;
+  document.getElementById("onlineCount").textContent = `접속중 ${State.onlineCount}명`;
   document.getElementById("onlineDot").classList.toggle("offline", State.onlineCount <= 0);
 }
 
@@ -1971,15 +1985,14 @@ function renderScores(g){
 
 function renderPhase(g){
   const label = document.getElementById("phaseLabel");
-  const map = {
-    BETTING: ["BETTING", "is-betting"],
-    BETTING_CLOSED: ["BETTING CLOSED", "is-closed"],
-    DEALING: ["DEALING", "is-dealing"],
-    RESULT: ["RESULT", "is-result"]
+  const clsMap = {
+    BETTING: "is-betting",
+    BETTING_CLOSED: "is-closed",
+    DEALING: "is-dealing",
+    RESULT: "is-result"
   };
-  const [text, cls] = map[g.phase] || ["–", ""];
-  label.textContent = text;
-  label.className = "phase-label " + cls;
+  label.textContent = PHASE_LABEL_KO[g.phase] || "–";
+  label.className = "phase-label " + (clsMap[g.phase] || "");
 
   document.getElementById("gameIdLabel").textContent = "#" + String(g.gameId).padStart(6, "0");
 }
@@ -1990,7 +2003,7 @@ function renderResultBanner(g){
   const naturalEl = document.getElementById("resultNatural");
 
   if(g.phase === "RESULT" && g.result){
-    labelEl.textContent = `${g.result} WIN` + (g.result === "TIE" ? "" : "");
+    labelEl.textContent = g.result === "TIE" ? "타이" : `${SIDE_LABEL_KO[g.result]} 승리`;
     labelEl.className = "label " + g.result.toLowerCase();
     naturalEl.style.display = g.isNatural ? "block" : "none";
     banner.classList.add("show");
@@ -2030,7 +2043,7 @@ function renderMyBet(){
   const row = document.getElementById("myBetRow");
   const side = document.getElementById("sideMyBet");
   if(State.myBet){
-    const text = `내 베팅: <span class="amt">${State.myBet.side} ${formatPoints(State.myBet.amount)} P</span>`;
+    const text = `내 베팅: <span class="amt">${SIDE_LABEL_KO[State.myBet.side] || State.myBet.side} ${formatPoints(State.myBet.amount)} P</span>`;
     row.innerHTML = text;
     side.innerHTML = text;
   }else{
@@ -2045,7 +2058,7 @@ function renderRecentGames(rows){
   const html = rows.length
     ? rows.map(r=>{
         const id = "#" + String(r.gameId).padStart(6,"0");
-        return `<div class="recent-row"><span class="rid">${id}</span><span class="rres ${r.result.toLowerCase()}">${r.result}</span></div>`;
+        return `<div class="recent-row"><span class="rid">${id}</span><span class="rres ${r.result.toLowerCase()}">${r.result === "TIE" ? "타이" : SIDE_LABEL_KO[r.result]}</span></div>`;
       }).join("")
     : `<div class="recent-empty">아직 게임 기록이 없습니다</div>`;
   document.getElementById("recentList").innerHTML = html;
@@ -2212,7 +2225,7 @@ function renderRequestList(containerId, rows){
         <span class="h-game num">${formatPoints(r.amount)} P</span>
         <span class="h-bet">${formatDate(r.createdAt)}</span>
       </div>
-      <span class="status-badge ${r.status}">${r.status}</span>
+      <span class="status-badge ${r.status}">${STATUS_LABEL_KO[r.status] || r.status}</span>
     </div>
   `).join("");
 }
@@ -2251,7 +2264,7 @@ function bindWalletEvents(){
    SECTION: PROFILE (stats + personal game history + display name)
    ================================================================ */
 function renderProfileStats(userData){
-  document.getElementById("profileName").textContent = userData.displayName || "PLAYER";
+  document.getElementById("profileName").textContent = userData.displayName || "플레이어";
   document.getElementById("statBalance").textContent = formatPoints(userData.availableBalance ?? userData.balance ?? 0) + " P";
   document.getElementById("statTotalBets").textContent = formatPoints(userData.totalBets || 0);
   document.getElementById("statWagered").textContent = formatPoints(userData.totalWagered || 0) + " P";
@@ -2304,8 +2317,8 @@ function renderMyHistory(rows){
     return `
     <div class="history-row">
       <div class="h-left">
-        <span class="h-game">GAME #${String(r.gameId).padStart(6,"0")}</span>
-        <span class="h-bet">${r.side} · ${r.result}</span>
+        <span class="h-game">게임 #${String(r.gameId).padStart(6,"0")}</span>
+        <span class="h-bet">${SIDE_LABEL_KO[r.side] || r.side} · ${r.result === "TIE" ? "타이" : SIDE_LABEL_KO[r.result]}</span>
       </div>
       <span class="h-profit num ${profit>=0?"pos":"neg"}">${profit>=0?"+":""}${formatPoints(profit)} P</span>
     </div>`;
@@ -2371,7 +2384,7 @@ function renderAdminDeposits(rows){
     <tr>
       <td class="muted">${userLabel(r.uid)}</td>
       <td class="num">${formatPoints(r.amount)} P</td>
-      <td><span class="status-badge ${r.status}">${r.status}</span></td>
+      <td><span class="status-badge ${r.status}">${STATUS_LABEL_KO[r.status] || r.status}</span></td>
       <td class="muted">${formatDate(r.createdAt)}</td>
       <td>
         ${r.status === "PENDING" ? `
@@ -2434,7 +2447,7 @@ function renderAdminWithdrawals(rows){
     <tr>
       <td class="muted">${userLabel(r.uid)}</td>
       <td class="num">${formatPoints(r.amount)} P</td>
-      <td><span class="status-badge ${r.status}">${r.status}</span></td>
+      <td><span class="status-badge ${r.status}">${STATUS_LABEL_KO[r.status] || r.status}</span></td>
       <td class="muted">${formatDate(r.createdAt)}</td>
       <td>
         ${r.status === "PENDING" ? `
@@ -2522,7 +2535,7 @@ function renderAdminGames(rows){
       <td>#${String(g.gameId).padStart(6,"0")}</td>
       <td class="num">${g.playerScore}</td>
       <td class="num">${g.bankerScore}</td>
-      <td>${g.result}${g.isNatural ? " (N)" : ""}</td>
+      <td>${g.result === "TIE" ? "타이" : SIDE_LABEL_KO[g.result]}${g.isNatural ? " (내추럴)" : ""}</td>
     </tr>
   `).join("");
 }
@@ -2530,14 +2543,14 @@ function renderAdminGames(rows){
 function renderAdminSettings(){
   const grid = document.getElementById("adminSettingsGrid");
   const entries = [
-    ["GAME INTERVAL", GAME_SETTINGS.gameIntervalSeconds + "s"],
-    ["BETTING TIME", GAME_SETTINGS.bettingSeconds + "s"],
-    ["MIN BET", formatPoints(GAME_SETTINGS.minBet) + " P"],
-    ["MAX BET", formatPoints(GAME_SETTINGS.maxBet) + " P"],
-    ["STARTING BALANCE", formatPoints(GAME_SETTINGS.startingBalance) + " P"],
-    ["PLAYER PAYOUT", "1 : " + GAME_SETTINGS.playerPayout],
-    ["BANKER PAYOUT", "1 : " + GAME_SETTINGS.bankerPayout],
-    ["TIE PAYOUT", "1 : " + GAME_SETTINGS.tiePayout]
+    ["게임 주기", GAME_SETTINGS.gameIntervalSeconds + "초"],
+    ["베팅 시간", GAME_SETTINGS.bettingSeconds + "초"],
+    ["최소 베팅", formatPoints(GAME_SETTINGS.minBet) + " P"],
+    ["최대 베팅", formatPoints(GAME_SETTINGS.maxBet) + " P"],
+    ["초기 지급 포인트", formatPoints(GAME_SETTINGS.startingBalance) + " P"],
+    ["플레이어 배당", "1 : " + GAME_SETTINGS.playerPayout],
+    ["뱅커 배당", "1 : " + GAME_SETTINGS.bankerPayout],
+    ["타이 배당", "1 : " + GAME_SETTINGS.tiePayout]
   ];
   grid.innerHTML = entries.map(([k,v])=>`
     <div class="stat-cell"><div class="k">${k}</div><div class="v">${v}</div></div>
