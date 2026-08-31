@@ -1,0 +1,1807 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>POKÉ BACCARAT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root{
+  --bg:#0A0E13;
+  --bg-elevated:#10151D;
+  --surface:#151C26;
+  --surface-2:#1B2430;
+  --border:#252F3D;
+  --border-soft:#1D2631;
+  --text:#E9ECF1;
+  --text-dim:#8C97A6;
+  --text-faint:#5B6472;
+
+  --accent:#C7A468;       /* muted brass */
+  --accent-dim:#8F7745;
+  --accent-soft:rgba(199,164,104,0.12);
+
+  --player:#5A8FC9;       /* muted steel blue */
+  --player-soft:rgba(90,143,201,0.14);
+  --banker:#B06A52;       /* muted rust/burgundy */
+  --banker-soft:rgba(176,106,82,0.14);
+  --tie:#7C8797;          /* muted slate */
+  --tie-soft:rgba(124,135,151,0.14);
+
+  --win:#5FAE82;
+  --loss:#B0655F;
+
+  --radius-sm:6px;
+  --radius-md:10px;
+  --radius-lg:16px;
+
+  --font-display:'Fraunces', serif;
+  --font-body:'Inter', sans-serif;
+}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{height:100%;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+button{font-family:inherit; cursor:pointer;}
+input{font-family:inherit;}
+.num{font-variant-numeric:tabular-nums;}
+
+::selection{background:var(--accent-soft);}
+
+/* subtle scrollbar */
+::-webkit-scrollbar{width:8px; height:8px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border); border-radius:4px;}
+
+/* ============================================================
+   LAYOUT SHELL
+   ============================================================ */
+#app{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+.app-header{
+  position:sticky; top:0; z-index:40;
+  background:rgba(10,14,19,0.92);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border-soft);
+  padding:14px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.brand{
+  display:flex;
+  align-items:baseline;
+  gap:8px;
+}
+.brand-mark{
+  width:22px; height:22px;
+  flex:none;
+}
+.brand-name{
+  font-family:var(--font-display);
+  font-weight:500;
+  font-size:17px;
+  letter-spacing:0.02em;
+  color:var(--text);
+}
+.brand-sub{
+  font-size:10px;
+  color:var(--text-faint);
+  letter-spacing:0.08em;
+}
+
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.online-pill{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:12px;
+  color:var(--text-dim);
+  padding:6px 10px;
+  border:1px solid var(--border);
+  border-radius:20px;
+}
+.online-dot{
+  width:6px; height:6px;
+  border-radius:50%;
+  background:var(--win);
+}
+.online-dot.offline{background:var(--text-faint);}
+
+.balance-pill{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  line-height:1.15;
+}
+.balance-pill .label{
+  font-size:9px;
+  letter-spacing:0.1em;
+  color:var(--text-faint);
+}
+.balance-pill .value{
+  font-size:15px;
+  font-weight:600;
+  color:var(--text);
+}
+.balance-pill .value .unit{
+  color:var(--text-dim);
+  font-weight:500;
+  font-size:11px;
+  margin-left:2px;
+}
+
+.nav-menu{
+  display:flex;
+  gap:2px;
+  padding:0 18px;
+  border-bottom:1px solid var(--border-soft);
+  overflow-x:auto;
+}
+.nav-item{
+  background:none;
+  border:none;
+  color:var(--text-faint);
+  font-size:12.5px;
+  letter-spacing:0.03em;
+  padding:12px 14px;
+  border-bottom:2px solid transparent;
+  white-space:nowrap;
+  transition:color .15s ease, border-color .15s ease;
+}
+.nav-item.active{
+  color:var(--text);
+  border-bottom-color:var(--accent);
+}
+.nav-item:hover{color:var(--text);}
+.nav-item[hidden]{display:none;}
+
+main{
+  flex:1;
+  width:100%;
+  max-width:1160px;
+  margin:0 auto;
+  padding:18px;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:18px;
+}
+
+@media (min-width:960px){
+  main{
+    grid-template-columns:minmax(0,1fr) 320px;
+    align-items:start;
+    padding:28px;
+    gap:24px;
+  }
+  .side-col{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    position:sticky;
+    top:84px;
+  }
+}
+
+.side-col{display:flex; flex-direction:column; gap:16px;}
+
+/* ============================================================
+   PANELS
+   ============================================================ */
+.panel{
+  background:var(--surface);
+  border:1px solid var(--border-soft);
+  border-radius:var(--radius-lg);
+  padding:18px;
+}
+.panel-title{
+  font-size:11px;
+  letter-spacing:0.09em;
+  color:var(--text-faint);
+  margin-bottom:12px;
+}
+
+/* ============================================================
+   GAME STATUS BAR
+   ============================================================ */
+.status-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:16px;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.game-id{
+  font-size:12px;
+  color:var(--text-dim);
+  letter-spacing:0.02em;
+}
+.game-id .num{color:var(--text);}
+
+.phase-block{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.phase-label{
+  font-size:11px;
+  letter-spacing:0.08em;
+  padding:5px 10px;
+  border-radius:20px;
+  border:1px solid var(--border);
+  color:var(--text-dim);
+}
+.phase-label.is-betting{color:var(--win); border-color:rgba(95,174,130,0.35);}
+.phase-label.is-closed{color:var(--loss); border-color:rgba(176,101,95,0.35);}
+.phase-label.is-dealing{color:var(--accent); border-color:rgba(199,164,104,0.35);}
+.phase-label.is-result{color:var(--text); border-color:var(--border);}
+
+.countdown{
+  font-size:14px;
+  font-weight:600;
+  color:var(--text);
+}
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+.table-wrap{
+  background:radial-gradient(120% 100% at 50% 0%, #131B25 0%, #0C1119 70%);
+  border:1px solid var(--border-soft);
+  border-radius:var(--radius-lg);
+  padding:22px 16px 26px;
+  position:relative;
+  overflow:hidden;
+}
+.table-wrap::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(60% 40% at 50% 0%, rgba(199,164,104,0.05), transparent 70%);
+  pointer-events:none;
+}
+
+.hands{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:10px;
+  position:relative;
+  z-index:1;
+}
+@media (max-width:520px){
+  .hands{grid-template-columns:1fr; gap:22px;}
+  .vs-divider{display:none;}
+}
+
+.hand{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+}
+.hand-label{
+  font-family:var(--font-display);
+  font-size:13px;
+  letter-spacing:0.14em;
+  color:var(--text-dim);
+}
+.hand-label.player{color:var(--player);}
+.hand-label.banker{color:var(--banker);}
+
+.card-row{
+  display:flex;
+  gap:8px;
+  min-height:92px;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+.playing-card{
+  width:58px;
+  height:82px;
+  border-radius:7px;
+  position:relative;
+  perspective:600px;
+  flex:none;
+}
+.playing-card-inner{
+  width:100%; height:100%;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:transform .5s cubic-bezier(.2,.7,.3,1);
+}
+.playing-card.revealed .playing-card-inner{transform:rotateY(180deg);}
+
+.card-face{
+  position:absolute;
+  inset:0;
+  border-radius:7px;
+  backface-visibility:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+.card-back{
+  background:
+    linear-gradient(155deg, #1B2432 0%, #10151D 100%);
+  border:1px solid var(--border);
+}
+.card-back::before{
+  content:"";
+  width:60%; height:60%;
+  border:1px solid rgba(199,164,104,0.35);
+  border-radius:4px;
+}
+.card-front{
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  transform:rotateY(180deg);
+  color:var(--text);
+  font-family:var(--font-display);
+  font-size:20px;
+}
+.card-front img{
+  width:100%; height:100%;
+  object-fit:cover;
+  border-radius:6px;
+}
+.card-front.fallback{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+}
+.card-front.fallback .rank{font-size:20px; font-weight:600;}
+.card-front.fallback .suit{font-size:13px; opacity:0.75;}
+.suit-red{color:#B06A52;}
+.suit-black{color:#C8CDD5;}
+
+.card-placeholder{
+  width:58px; height:82px;
+  border-radius:7px;
+  border:1px dashed var(--border);
+  flex:none;
+}
+
+.score{
+  font-family:var(--font-display);
+  font-size:34px;
+  font-weight:500;
+  color:var(--text);
+  line-height:1;
+}
+.score.player{color:var(--player);}
+.score.banker{color:var(--banker);}
+.score-placeholder{color:var(--text-faint); font-size:22px;}
+
+.vs-divider{
+  font-family:var(--font-display);
+  font-size:12px;
+  letter-spacing:0.1em;
+  color:var(--text-faint);
+  padding:0 4px;
+}
+
+.result-banner{
+  margin-top:18px;
+  text-align:center;
+  opacity:0;
+  transform:translateY(4px);
+  transition:opacity .4s ease, transform .4s ease;
+  position:relative;
+  z-index:1;
+}
+.result-banner.show{opacity:1; transform:translateY(0);}
+.result-banner .label{
+  font-family:var(--font-display);
+  font-size:20px;
+  letter-spacing:0.04em;
+}
+.result-banner .label.player{color:var(--player);}
+.result-banner .label.banker{color:var(--banker);}
+.result-banner .label.tie{color:var(--tie);}
+.result-banner .natural{
+  font-size:10.5px;
+  letter-spacing:0.1em;
+  color:var(--accent);
+  margin-top:4px;
+}
+
+/* ============================================================
+   BET TOTALS
+   ============================================================ */
+.bet-totals{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-top:20px;
+  position:relative;
+  z-index:1;
+}
+.bet-total-cell{
+  border:1px solid var(--border-soft);
+  border-radius:var(--radius-md);
+  padding:10px 8px;
+  text-align:center;
+  background:var(--bg-elevated);
+}
+.bet-total-cell .k{
+  font-size:10px;
+  letter-spacing:0.08em;
+  color:var(--text-faint);
+  margin-bottom:4px;
+}
+.bet-total-cell .v{
+  font-size:14px;
+  font-weight:600;
+  color:var(--text);
+}
+.bet-total-cell.player .k{color:var(--player);}
+.bet-total-cell.banker .k{color:var(--banker);}
+.bet-total-cell.tie .k{color:var(--tie);}
+
+/* ============================================================
+   BETTING PANEL
+   ============================================================ */
+.bet-choices{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-bottom:14px;
+}
+.bet-choice{
+  background:var(--bg-elevated);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:12px 8px;
+  text-align:center;
+  transition:border-color .15s ease, background .15s ease;
+}
+.bet-choice .name{
+  font-size:12px;
+  letter-spacing:0.05em;
+  color:var(--text-dim);
+  margin-bottom:2px;
+}
+.bet-choice .payout{
+  font-size:10px;
+  color:var(--text-faint);
+}
+.bet-choice.player.selected{border-color:var(--player); background:var(--player-soft);}
+.bet-choice.player.selected .name{color:var(--player);}
+.bet-choice.banker.selected{border-color:var(--banker); background:var(--banker-soft);}
+.bet-choice.banker.selected .name{color:var(--banker);}
+.bet-choice.tie.selected{border-color:var(--tie); background:var(--tie-soft);}
+.bet-choice.tie.selected .name{color:var(--tie);}
+.bet-choice:disabled{opacity:0.45; cursor:not-allowed;}
+.bet-choice:not(:disabled):hover{border-color:var(--text-faint);}
+
+.chip-row{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-bottom:10px;
+}
+.chip{
+  background:var(--bg-elevated);
+  border:1px solid var(--border);
+  color:var(--text-dim);
+  font-size:12px;
+  padding:8px 12px;
+  border-radius:20px;
+  transition:border-color .15s ease, color .15s ease;
+}
+.chip.selected{border-color:var(--accent); color:var(--accent);}
+.chip:disabled{opacity:0.4; cursor:not-allowed;}
+
+.custom-amount{
+  display:flex;
+  gap:8px;
+  margin-bottom:12px;
+}
+.custom-amount input{
+  flex:1;
+  background:var(--bg-elevated);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  color:var(--text);
+  padding:10px 12px;
+  font-size:13px;
+}
+.custom-amount input:focus{outline:none; border-color:var(--accent-dim);}
+
+.my-bet-row{
+  font-size:12px;
+  color:var(--text-dim);
+  margin-bottom:10px;
+  min-height:16px;
+}
+.my-bet-row .amt{color:var(--text); font-weight:600;}
+
+.confirm-btn{
+  width:100%;
+  background:var(--accent);
+  color:#12130F;
+  border:none;
+  border-radius:var(--radius-md);
+  padding:13px;
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:0.03em;
+  transition:filter .15s ease, transform .1s ease;
+}
+.confirm-btn:hover:not(:disabled){filter:brightness(1.08);}
+.confirm-btn:active:not(:disabled){transform:scale(0.99);}
+.confirm-btn:disabled{
+  background:var(--surface-2);
+  color:var(--text-faint);
+  cursor:not-allowed;
+}
+
+.closed-note{
+  text-align:center;
+  font-size:12px;
+  color:var(--text-faint);
+  padding:14px 0;
+}
+
+/* ============================================================
+   RECENT GAMES
+   ============================================================ */
+.recent-list{
+  display:flex;
+  flex-direction:column;
+  gap:1px;
+}
+.recent-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:9px 2px;
+  border-bottom:1px solid var(--border-soft);
+  font-size:12.5px;
+}
+.recent-row:last-child{border-bottom:none;}
+.recent-row .rid{color:var(--text-faint);}
+.recent-row .rres{font-weight:600; letter-spacing:0.03em;}
+.recent-row .rres.player{color:var(--player);}
+.recent-row .rres.banker{color:var(--banker);}
+.recent-row .rres.tie{color:var(--tie);}
+.recent-empty{
+  color:var(--text-faint);
+  font-size:12.5px;
+  padding:8px 2px;
+}
+
+/* ============================================================
+   NOTICE / TOAST
+   ============================================================ */
+.toast-stack{
+  position:fixed;
+  bottom:18px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  z-index:100;
+  width:calc(100% - 32px);
+  max-width:360px;
+  pointer-events:none;
+}
+.toast{
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  color:var(--text);
+  font-size:12.5px;
+  padding:11px 14px;
+  border-radius:var(--radius-md);
+  opacity:0;
+  transform:translateY(6px);
+  transition:opacity .25s ease, transform .25s ease;
+}
+.toast.show{opacity:1; transform:translateY(0);}
+
+/* ============================================================
+   VIEW SWITCHING (placeholder views for phase 2)
+   ============================================================ */
+.view{display:none;}
+.view.active{display:block;}
+
+.placeholder-view{
+  padding:40px 20px;
+  text-align:center;
+  color:var(--text-faint);
+  font-size:13px;
+}
+
+/* setup notice */
+.setup-notice{
+  background:var(--surface);
+  border:1px solid rgba(199,164,104,0.3);
+  border-radius:var(--radius-md);
+  padding:14px 16px;
+  font-size:12.5px;
+  color:var(--text-dim);
+  line-height:1.6;
+  margin-bottom:14px;
+}
+.setup-notice strong{color:var(--accent);}
+.setup-notice code{
+  background:var(--bg-elevated);
+  padding:1px 5px;
+  border-radius:4px;
+  font-size:11.5px;
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <header class="app-header">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 24 24" fill="none">
+        <rect x="2" y="2" width="20" height="20" rx="4" stroke="#C7A468" stroke-width="1.4"/>
+        <path d="M12 6.5 L15.5 12 L12 17.5 L8.5 12 Z" stroke="#C7A468" stroke-width="1.2" fill="none"/>
+      </svg>
+      <span class="brand-name">Poké Baccarat</span>
+      <span class="brand-sub" id="tableLabel">TABLE 01</span>
+    </div>
+    <div class="header-right">
+      <div class="online-pill">
+        <span class="online-dot" id="onlineDot"></span>
+        <span id="onlineCount">–</span>
+      </div>
+      <div class="balance-pill">
+        <span class="label">BALANCE</span>
+        <span class="value" id="balanceValue">– <span class="unit">P</span></span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="nav-menu">
+    <button class="nav-item active" data-view="game">GAME</button>
+    <button class="nav-item" data-view="history">HISTORY</button>
+    <button class="nav-item" data-view="wallet">WALLET</button>
+    <button class="nav-item" data-view="profile">PROFILE</button>
+    <button class="nav-item" data-view="admin" id="navAdmin" hidden>ADMIN</button>
+  </nav>
+
+  <main>
+    <!-- ============ GAME VIEW ============ -->
+    <div class="view active" id="view-game">
+
+      <div class="setup-notice" id="setupNotice">
+        Firebase 설정이 필요합니다. 아래 <code>CONFIG</code> 섹션의 <code>firebaseConfig</code> 값을 Firebase 콘솔에서 발급받은 값으로 교체하세요.
+      </div>
+
+      <div class="panel">
+        <div class="status-bar">
+          <div class="game-id">GAME <span class="num" id="gameIdLabel">#000000</span></div>
+          <div class="phase-block">
+            <span class="phase-label" id="phaseLabel">–</span>
+            <span class="countdown num" id="countdownLabel">00:00</span>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <div class="hands">
+            <div class="hand">
+              <span class="hand-label player">PLAYER</span>
+              <div class="card-row" id="playerCards"></div>
+              <div class="score player" id="playerScore"><span class="score-placeholder">–</span></div>
+            </div>
+            <div class="vs-divider">VS</div>
+            <div class="hand">
+              <span class="hand-label banker">BANKER</span>
+              <div class="card-row" id="bankerCards"></div>
+              <div class="score banker" id="bankerScore"><span class="score-placeholder">–</span></div>
+            </div>
+          </div>
+
+          <div class="result-banner" id="resultBanner">
+            <div class="label" id="resultLabel"></div>
+            <div class="natural" id="resultNatural" style="display:none;">NATURAL</div>
+          </div>
+
+          <div class="bet-totals">
+            <div class="bet-total-cell player">
+              <div class="k">PLAYER</div>
+              <div class="v num" id="totalPlayer">0 P</div>
+            </div>
+            <div class="bet-total-cell banker">
+              <div class="k">BANKER</div>
+              <div class="v num" id="totalBanker">0 P</div>
+            </div>
+            <div class="bet-total-cell tie">
+              <div class="k">TIE</div>
+              <div class="v num" id="totalTie">0 P</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="bettingPanel">
+        <div class="panel-title">PLACE YOUR BET</div>
+
+        <div class="bet-choices">
+          <button class="bet-choice player" data-side="PLAYER">
+            <div class="name">PLAYER</div>
+            <div class="payout">1 : 1</div>
+          </button>
+          <button class="bet-choice banker" data-side="BANKER">
+            <div class="name">BANKER</div>
+            <div class="payout">1 : 1</div>
+          </button>
+          <button class="bet-choice tie" data-side="TIE">
+            <div class="name">TIE</div>
+            <div class="payout">8 : 1</div>
+          </button>
+        </div>
+
+        <div class="chip-row" id="chipRow"></div>
+
+        <div class="custom-amount">
+          <input type="number" id="customAmount" placeholder="직접 입력" min="0" step="100">
+        </div>
+
+        <div class="my-bet-row" id="myBetRow"></div>
+
+        <button class="confirm-btn" id="confirmBtn" disabled>CONFIRM BET</button>
+        <div class="closed-note" id="closedNote" style="display:none;">이번 라운드 베팅이 마감되었습니다</div>
+      </div>
+
+      <div class="panel side-col-only-mobile" id="recentPanel">
+        <div class="panel-title">RECENT GAMES</div>
+        <div class="recent-list" id="recentList">
+          <div class="recent-empty">아직 게임 기록이 없습니다</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ HISTORY VIEW (phase 2) ============ -->
+    <div class="view" id="view-history">
+      <div class="panel"><div class="placeholder-view">게임 기록 페이지는 다음 단계에서 추가됩니다.</div></div>
+    </div>
+
+    <!-- ============ WALLET VIEW (phase 2) ============ -->
+    <div class="view" id="view-wallet">
+      <div class="panel"><div class="placeholder-view">지갑(충전/환전) 페이지는 다음 단계에서 추가됩니다.</div></div>
+    </div>
+
+    <!-- ============ PROFILE VIEW (phase 2) ============ -->
+    <div class="view" id="view-profile">
+      <div class="panel"><div class="placeholder-view">프로필/통계 페이지는 다음 단계에서 추가됩니다.</div></div>
+    </div>
+
+    <!-- ============ ADMIN VIEW (phase 2) ============ -->
+    <div class="view" id="view-admin">
+      <div class="panel"><div class="placeholder-view">관리자 페이지는 다음 단계에서 추가됩니다.</div></div>
+    </div>
+
+    <!-- ============ SIDE COLUMN (desktop) ============ -->
+    <div class="side-col">
+      <div class="panel">
+        <div class="panel-title">MY BET</div>
+        <div id="sideMyBet" style="font-size:13px; color:var(--text-dim);">이번 라운드에 베팅하지 않았습니다</div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">RECENT GAMES</div>
+        <div class="recent-list" id="recentListDesktop">
+          <div class="recent-empty">아직 게임 기록이 없습니다</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast-stack" id="toastStack"></div>
+
+<!-- ============================================================
+     FIREBASE SDK (compat build — simplest single-file usage)
+     ============================================================ -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+<script>
+/* ================================================================
+   SECTION: CONFIG
+   전역 설정값. 관리자 페이지(phase 2)에서 GAME_SETTINGS 문서로
+   이전하여 런타임에 변경할 수 있도록 확장할 예정.
+   ================================================================ */
+const firebaseConfig = {
+  apiKey: "",
+  authDomain: "",
+  databaseURL: "",
+  projectId: "",
+  storageBucket: "",
+  messagingSenderId: "",
+  appId: ""
+};
+
+const GAME_SETTINGS = {
+  gameIntervalSeconds: 60,
+  bettingSeconds: 40,
+  bettingClosedSeconds: 5,   // BETTING -> DEALING buffer
+  dealingSeconds: 10,
+  resultSeconds: 5,
+  minBet: 100,
+  maxBet: 10000,
+  startingBalance: 10000,
+  playerPayout: 1,
+  bankerPayout: 1,
+  tiePayout: 8,
+  inactiveResetTimeMs: 30 * 60 * 1000,
+  chipValues: [100, 500, 1000, 5000, 10000],
+  historyLimit: 20
+};
+
+// 카드 이미지: 파일만 교체하면 바로 적용됩니다.
+const CARD_IMAGES = {
+  "A-S":"assets/cards/A-S.png", "A-H":"assets/cards/A-H.png", "A-D":"assets/cards/A-D.png", "A-C":"assets/cards/A-C.png",
+  "2-S":"assets/cards/2-S.png", "2-H":"assets/cards/2-H.png", "2-D":"assets/cards/2-D.png", "2-C":"assets/cards/2-C.png",
+  "3-S":"assets/cards/3-S.png", "3-H":"assets/cards/3-H.png", "3-D":"assets/cards/3-D.png", "3-C":"assets/cards/3-C.png",
+  "4-S":"assets/cards/4-S.png", "4-H":"assets/cards/4-H.png", "4-D":"assets/cards/4-D.png", "4-C":"assets/cards/4-C.png",
+  "5-S":"assets/cards/5-S.png", "5-H":"assets/cards/5-H.png", "5-D":"assets/cards/5-D.png", "5-C":"assets/cards/5-C.png",
+  "6-S":"assets/cards/6-S.png", "6-H":"assets/cards/6-H.png", "6-D":"assets/cards/6-D.png", "6-C":"assets/cards/6-C.png",
+  "7-S":"assets/cards/7-S.png", "7-H":"assets/cards/7-H.png", "7-D":"assets/cards/7-D.png", "7-C":"assets/cards/7-C.png",
+  "8-S":"assets/cards/8-S.png", "8-H":"assets/cards/8-H.png", "8-D":"assets/cards/8-D.png", "8-C":"assets/cards/8-C.png",
+  "9-S":"assets/cards/9-S.png", "9-H":"assets/cards/9-H.png", "9-D":"assets/cards/9-D.png", "9-C":"assets/cards/9-C.png",
+  "10-S":"assets/cards/10-S.png", "10-H":"assets/cards/10-H.png", "10-D":"assets/cards/10-D.png", "10-C":"assets/cards/10-C.png"
+};
+
+const SUITS = ["S","H","D","C"];
+const RANKS = ["A","2","3","4","5","6","7","8","9","10"];
+const ADMIN_UIDS = [
+  // 관리자 UID를 여기에 추가하세요. 실제 권한 검증은 반드시
+  // Firestore Security Rules에서 수행합니다 (phase 2 admin 문서 참고).
+  // "abc123uid..."
+];
+
+/* ================================================================
+   SECTION: FIREBASE INIT
+   ================================================================ */
+let fbApp = null, auth = null, db = null, rtdb = null;
+let firebaseReady = false;
+
+function initFirebase(){
+  const isConfigured = !!firebaseConfig.apiKey && !!firebaseConfig.projectId;
+  const notice = document.getElementById("setupNotice");
+  if(!isConfigured){
+    notice.style.display = "block";
+    return false;
+  }
+  notice.style.display = "none";
+  try{
+    fbApp = firebase.initializeApp(firebaseConfig);
+    auth = firebase.auth();
+    db = firebase.firestore();
+    rtdb = firebase.database();
+    firebaseReady = true;
+    return true;
+  }catch(err){
+    console.error("Firebase init failed:", err);
+    showToast("Firebase 초기화에 실패했습니다.");
+    return false;
+  }
+}
+
+/* ================================================================
+   SECTION: STATE (in-memory client state)
+   ================================================================ */
+const State = {
+  uid: null,
+  balance: 0,
+  currentGame: null,      // live doc from games/current
+  myBet: null,            // live doc from games/current/bets/{uid}
+  countdownTimer: null,
+  onlineCount: 0,
+  presenceRef: null,
+  connectionId: null,
+  selectedSide: null,
+  selectedAmount: null,
+  lastRenderedPhase: null,
+  lastRenderedGameId: null,
+  gameUnsub: null,
+  betUnsub: null,
+  historyUnsub: null,
+  userUnsub: null
+};
+
+/* ================================================================
+   SECTION: UTILITIES
+   ================================================================ */
+function formatPoints(n){
+  return Number(n || 0).toLocaleString("en-US");
+}
+function pad2(n){ return String(n).padStart(2,"0"); }
+function nowMs(){ return Date.now(); }
+
+function showToast(message){
+  const stack = document.getElementById("toastStack");
+  const el = document.createElement("div");
+  el.className = "toast";
+  el.textContent = message;
+  stack.appendChild(el);
+  requestAnimationFrame(()=> el.classList.add("show"));
+  setTimeout(()=>{
+    el.classList.remove("show");
+    setTimeout(()=> el.remove(), 300);
+  }, 3200);
+}
+
+function rankValue(rank){
+  if(rank === "A") return 1;
+  if(rank === "10") return 0;
+  return parseInt(rank, 10);
+}
+function cardRank(cardId){ return cardId.split("-")[0]; }
+function cardSuit(cardId){ return cardId.split("-")[1]; }
+
+function computeScore(cards){
+  const sum = cards.reduce((acc, c)=> acc + rankValue(cardRank(c)), 0);
+  return sum % 10;
+}
+
+/* ================================================================
+   SECTION: CARD SYSTEM
+   ================================================================ */
+function buildFreshDeck(){
+  const deck = [];
+  for(const r of RANKS){
+    for(const s of SUITS){
+      deck.push(`${r}-${s}`);
+    }
+  }
+  return deck;
+}
+function shuffleDeck(deck){
+  const d = deck.slice();
+  for(let i = d.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i+1));
+    [d[i], d[j]] = [d[j], d[i]];
+  }
+  return d;
+}
+function drawCards(deck, count){
+  return deck.splice(0, count);
+}
+
+/* ================================================================
+   SECTION: BACCARAT ENGINE
+   순수 함수로 분리되어 있어 향후 Cloud Functions로 이식하기 쉽습니다.
+   ================================================================ */
+function shouldPlayerDraw(playerScore){
+  return playerScore <= 5;
+}
+
+function shouldBankerDraw(bankerScore, playerThirdCard){
+  if(bankerScore <= 2) return true;
+  if(bankerScore >= 7) return false;
+  if(playerThirdCard === null){
+    // player stood (natural or 6~9 with no third card) -> banker draws on 0-5
+    return bankerScore <= 5;
+  }
+  const p = rankValue(cardRank(playerThirdCard));
+  if(bankerScore === 3) return p !== 8;
+  if(bankerScore === 4) return p >= 2 && p <= 7;
+  if(bankerScore === 5) return p >= 4 && p <= 7;
+  if(bankerScore === 6) return p === 6 || p === 7;
+  return false;
+}
+
+// 전체 라운드를 결정론적으로 계산 (deck에서 필요한 카드를 순서대로 소비)
+function resolveRound(deck){
+  const playerCards = drawCards(deck, 2);
+  const bankerCards = drawCards(deck, 2);
+
+  let playerScore = computeScore(playerCards);
+  let bankerScore = computeScore(bankerCards);
+  const isNatural = playerScore >= 8 || bankerScore >= 8;
+
+  let playerThird = null;
+
+  if(!isNatural){
+    if(shouldPlayerDraw(playerScore)){
+      playerThird = drawCards(deck, 1)[0];
+      playerCards.push(playerThird);
+      playerScore = computeScore(playerCards);
+    }
+    if(shouldBankerDraw(bankerScore, playerThird)){
+      const bankerThird = drawCards(deck, 1)[0];
+      bankerCards.push(bankerThird);
+      bankerScore = computeScore(bankerCards);
+    }
+  }
+
+  let result;
+  if(playerScore > bankerScore) result = "PLAYER";
+  else if(bankerScore > playerScore) result = "BANKER";
+  else result = "TIE";
+
+  return { playerCards, bankerCards, playerScore, bankerScore, result, isNatural };
+}
+
+function calculatePayout(side, amount, result){
+  if(side !== result) return 0;
+  const table = { PLAYER: GAME_SETTINGS.playerPayout, BANKER: GAME_SETTINGS.bankerPayout, TIE: GAME_SETTINGS.tiePayout };
+  return amount + amount * table[side]; // 원금 + 배당
+}
+
+/* ================================================================
+   SECTION: AUTH
+   ================================================================ */
+function initAuth(){
+  auth.onAuthStateChanged(async (user)=>{
+    if(user){
+      State.uid = user.uid;
+      await ensureUserDoc(user.uid);
+      subscribeToUser(user.uid);
+      registerPresence(user.uid);
+      updateAdminNavVisibility(user.uid);
+    }else{
+      auth.signInAnonymously().catch(err=>{
+        console.error("Anonymous sign-in failed:", err);
+        showToast("로그인에 실패했습니다. 새로고침 해주세요.");
+      });
+    }
+  });
+}
+
+function generateGuestName(){
+  const suffix = Math.random().toString(16).slice(2, 6).toUpperCase();
+  return `Player ${suffix}`;
+}
+
+async function ensureUserDoc(uid){
+  const ref = db.collection("users").doc(uid);
+  const snap = await ref.get();
+  if(!snap.exists){
+    await ref.set({
+      displayName: generateGuestName(),
+      balance: GAME_SETTINGS.startingBalance,
+      availableBalance: GAME_SETTINGS.startingBalance,
+      pendingWithdrawal: 0,
+      totalBets: 0,
+      totalWagered: 0,
+      playerWins: 0,
+      bankerWins: 0,
+      tieWins: 0,
+      totalProfit: 0,
+      currentStreak: 0,
+      bestStreak: 0,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+  }
+}
+
+function subscribeToUser(uid){
+  if(State.userUnsub) State.userUnsub();
+  State.userUnsub = db.collection("users").doc(uid).onSnapshot(snap=>{
+    if(!snap.exists) return;
+    const data = snap.data();
+    State.balance = data.availableBalance ?? data.balance ?? 0;
+    renderBalance();
+  });
+}
+
+function updateAdminNavVisibility(uid){
+  const isAdmin = ADMIN_UIDS.includes(uid);
+  document.getElementById("navAdmin").hidden = !isAdmin;
+}
+
+/* ================================================================
+   SECTION: PRESENCE (Realtime Database)
+   presence/{uid}/{connectionId} 구조를 사용해 다중 탭을 지원합니다.
+   ================================================================ */
+function registerPresence(uid){
+  const connRef = rtdb.ref(".info/connected");
+  connRef.on("value", (snap)=>{
+    if(snap.val() !== true) return;
+
+    const myConnRef = rtdb.ref(`presence/${uid}`).push();
+    State.connectionId = myConnRef.key;
+    State.presenceRef = myConnRef;
+
+    myConnRef.onDisconnect().remove();
+    myConnRef.set({ online: true, lastSeen: firebase.database.ServerValue.TIMESTAMP });
+  });
+
+  // 전체 접속자(연결) 수 구독 — presence 트리 전체를 읽되, RTDB 요금은
+  // Firestore와 별도이며 소규모 커뮤니티 사용량에서는 무료 한도 내로 충분.
+  rtdb.ref("presence").on("value", (snap)=>{
+    let total = 0;
+    snap.forEach(userNode=>{
+      total += userNode.numChildren();
+    });
+    State.onlineCount = total;
+    renderOnlineCount();
+    maybeActAsCoordinator();
+  });
+}
+
+/* ================================================================
+   SECTION: GAME STATE / COORDINATOR
+   games/current 문서 하나를 모든 클라이언트가 구독합니다.
+   접속자가 1명 이상일 때만 게임 엔진이 동작하도록, 매 presence
+   변경 시 "혹시 게임을 초기화/재개/진행해야 하는가"를 판단합니다.
+   여러 클라이언트가 동시에 시도해도 Firestore Transaction으로
+   단 하나만 성공하도록 보장합니다.
+   ================================================================ */
+let coordinatorCheckInFlight = false;
+
+async function maybeActAsCoordinator(){
+  if(!firebaseReady || !State.uid) return;
+  if(State.onlineCount <= 0) return;      // 아무도 없으면 아무것도 하지 않음
+  if(coordinatorCheckInFlight) return;
+  coordinatorCheckInFlight = true;
+  try{
+    await db.runTransaction(async (tx)=>{
+      const ref = db.collection("games").doc("current");
+      const snap = await tx.get(ref);
+      const now = nowMs();
+
+      if(!snap.exists){
+        tx.set(ref, buildNewGameDoc(1));
+        return;
+      }
+
+      const g = snap.data();
+
+      if(g.engineStatus === "STOPPED"){
+        // 정지되어 있었다면: 오래 비어있었는지 확인 후 재개 or 새 게임
+        const idleFor = now - (g.stoppedAt || 0);
+        if(idleFor > GAME_SETTINGS.inactiveResetTimeMs || g.phase === "RESULT" || (g.resultEndsAt && now > g.resultEndsAt)){
+          tx.set(ref, buildNewGameDoc((g.gameId || 0) + 1));
+        }else{
+          tx.update(ref, { engineStatus: "ACTIVE", stoppedAt: null });
+        }
+        return;
+      }
+
+      // 이미 ACTIVE 상태 — 라운드 전환이 필요한지만 확인 (진행 로직은
+      // advanceGameIfNeeded에서 처리하며, 여기서는 새 게임 생성을 하지 않음)
+    });
+  }catch(err){
+    console.error("Coordinator transaction failed:", err);
+  }finally{
+    coordinatorCheckInFlight = false;
+  }
+}
+
+function buildNewGameDoc(gameId){
+  const now = nowMs();
+  const bettingEndsAt = now + GAME_SETTINGS.bettingSeconds * 1000;
+  const dealingStartsAt = bettingEndsAt + GAME_SETTINGS.bettingClosedSeconds * 1000;
+  const dealingEndsAt = dealingStartsAt + GAME_SETTINGS.dealingSeconds * 1000;
+  const resultEndsAt = dealingEndsAt + GAME_SETTINGS.resultSeconds * 1000;
+
+  return {
+    gameId,
+    phase: "BETTING",
+    engineStatus: "ACTIVE",
+    stoppedAt: null,
+    playerCards: [],
+    bankerCards: [],
+    playerScore: null,
+    bankerScore: null,
+    result: null,
+    isNatural: false,
+    playerTotalBet: 0,
+    bankerTotalBet: 0,
+    tieTotalBet: 0,
+    startedAt: now,
+    bettingEndsAt,
+    dealingStartsAt,
+    dealingEndsAt,
+    resultEndsAt,
+    resolvedAtPhase: null, // "DEALING" 진입 시 카드가 결정되었는지 표시
+    updatedAt: now
+  };
+}
+
+// 게임 문서를 구독하는 클라이언트 중 하나가(랜덤 지연 후) 다음 단계로
+// 진행이 필요한지 검사합니다. Transaction으로 보호되어 중복 실행되지 않습니다.
+let advanceTimer = null;
+function scheduleAdvanceCheck(delayMs){
+  if(advanceTimer) clearTimeout(advanceTimer);
+  advanceTimer = setTimeout(advanceGameIfNeeded, Math.max(300, delayMs));
+}
+
+async function advanceGameIfNeeded(){
+  if(!firebaseReady || !State.uid || State.onlineCount <= 0) return;
+  const g = State.currentGame;
+  if(!g) return;
+  const now = nowMs();
+
+  try{
+    if(g.phase === "BETTING" && now >= g.bettingEndsAt){
+      await db.runTransaction(async (tx)=>{
+        const ref = db.collection("games").doc("current");
+        const snap = await tx.get(ref);
+        const cur = snap.data();
+        if(!cur || cur.phase !== "BETTING" || cur.gameId !== g.gameId) return;
+        tx.update(ref, { phase: "BETTING_CLOSED", updatedAt: nowMs() });
+      });
+    }else if(g.phase === "BETTING_CLOSED" && now >= g.dealingStartsAt){
+      await db.runTransaction(async (tx)=>{
+        const ref = db.collection("games").doc("current");
+        const snap = await tx.get(ref);
+        const cur = snap.data();
+        if(!cur || cur.phase !== "BETTING_CLOSED" || cur.gameId !== g.gameId) return;
+
+        // 카드 결과는 이 시점에 단 한 번만 결정한다.
+        const deck = shuffleDeck(buildFreshDeck());
+        const round = resolveRound(deck);
+
+        tx.update(ref, {
+          phase: "DEALING",
+          playerCards: round.playerCards,
+          bankerCards: round.bankerCards,
+          playerScore: round.playerScore,
+          bankerScore: round.bankerScore,
+          result: round.result,
+          isNatural: round.isNatural,
+          resolvedAtPhase: "DEALING",
+          updatedAt: nowMs()
+        });
+      });
+    }else if(g.phase === "DEALING" && now >= g.dealingEndsAt){
+      await db.runTransaction(async (tx)=>{
+        const ref = db.collection("games").doc("current");
+        const snap = await tx.get(ref);
+        const cur = snap.data();
+        if(!cur || cur.phase !== "DEALING" || cur.gameId !== g.gameId) return;
+        tx.update(ref, { phase: "RESULT", updatedAt: nowMs() });
+      });
+      // 정산은 별도 함수에서, 결과가 이미 기록된 후 한 번만 수행
+      await settleGameIfNeeded(g);
+    }else if(g.phase === "RESULT" && now >= g.resultEndsAt){
+      await db.runTransaction(async (tx)=>{
+        const ref = db.collection("games").doc("current");
+        const snap = await tx.get(ref);
+        const cur = snap.data();
+        if(!cur || cur.phase !== "RESULT" || cur.gameId !== g.gameId) return;
+
+        if(State.onlineCount <= 0){
+          tx.update(ref, { engineStatus: "STOPPED", stoppedAt: nowMs(), updatedAt: nowMs() });
+        }else{
+          const next = buildNewGameDoc(cur.gameId + 1);
+          tx.set(ref, next);
+        }
+      });
+      await archiveGameToHistory(g);
+    }
+  }catch(err){
+    console.error("advanceGameIfNeeded failed:", err);
+  }
+}
+
+// 라운드 결과에 따른 지급/기록. gameId + "settled" 플래그로 중복 정산을 방지.
+async function settleGameIfNeeded(g){
+  if(!State.uid) return;
+  const myBetRef = db.collection("games").doc("current").collection("bets").doc(State.uid);
+
+  try{
+    await db.runTransaction(async (tx)=>{
+      const gameRef = db.collection("games").doc("current");
+      const gameSnap = await tx.get(gameRef);
+      const cur = gameSnap.data();
+      if(!cur || cur.gameId !== g.gameId || !cur.result) return;
+
+      const betSnap = await tx.get(myBetRef);
+      if(!betSnap.exists) return;
+      const bet = betSnap.data();
+      if(bet.settled) return; // 이미 정산됨 — 중복 처리 방지
+
+      const payout = calculatePayout(bet.side, bet.amount, cur.result);
+      const userRef = db.collection("users").doc(State.uid);
+      const userSnap = await tx.get(userRef);
+      const user = userSnap.data();
+
+      const balanceBefore = user.availableBalance ?? user.balance ?? 0;
+      const balanceAfter = balanceBefore + payout;
+      const profitDelta = payout - bet.amount;
+
+      const streakWon = bet.side === cur.result;
+      const newStreak = streakWon ? (user.currentStreak || 0) + 1 : 0;
+      const newBest = Math.max(user.bestStreak || 0, newStreak);
+
+      const winField = cur.result === "PLAYER" ? "playerWins" : cur.result === "BANKER" ? "bankerWins" : "tieWins";
+
+      tx.update(userRef, {
+        balance: balanceAfter,
+        availableBalance: balanceAfter,
+        totalProfit: (user.totalProfit || 0) + profitDelta,
+        currentStreak: newStreak,
+        bestStreak: newBest,
+        [winField]: (user[winField] || 0) + (streakWon ? 1 : 0)
+      });
+
+      tx.update(myBetRef, { settled: true, payout, result: cur.result });
+
+      const txnRef = db.collection("transactions").doc();
+      tx.set(txnRef, {
+        uid: State.uid,
+        type: "GAME_SETTLEMENT",
+        amount: profitDelta,
+        balanceBefore,
+        balanceAfter,
+        gameId: cur.gameId,
+        side: bet.side,
+        result: cur.result,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    });
+  }catch(err){
+    console.error("settleGameIfNeeded failed:", err);
+  }
+}
+
+async function archiveGameToHistory(g){
+  try{
+    const ref = db.collection("gameHistory").doc(String(g.gameId));
+    const snap = await ref.get();
+    if(snap.exists) return; // 이미 기록됨
+    await ref.set({
+      gameId: g.gameId,
+      playerCards: g.playerCards,
+      bankerCards: g.bankerCards,
+      playerScore: g.playerScore,
+      bankerScore: g.bankerScore,
+      result: g.result,
+      isNatural: g.isNatural,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+  }catch(err){
+    // 여러 클라이언트가 동시에 시도할 수 있으므로 실패해도 무시 가능
+    console.warn("archiveGameToHistory:", err.message);
+  }
+}
+
+/* ================================================================
+   SECTION: REALTIME SYNC (subscribe to games/current)
+   ================================================================ */
+function subscribeToGame(){
+  if(State.gameUnsub) State.gameUnsub();
+  State.gameUnsub = db.collection("games").doc("current").onSnapshot(snap=>{
+    if(!snap.exists){
+      State.currentGame = null;
+      return;
+    }
+    State.currentGame = snap.data();
+    renderGame();
+    scheduleAdvanceCheck(150); // 상태가 바뀔 때마다 다음 전환이 필요한지 재검사
+  });
+}
+
+function subscribeToMyBet(){
+  if(!State.uid) return;
+  if(State.betUnsub) State.betUnsub();
+  State.betUnsub = db.collection("games").doc("current").collection("bets").doc(State.uid)
+    .onSnapshot(snap=>{
+      State.myBet = snap.exists ? snap.data() : null;
+      renderMyBet();
+    });
+}
+
+function subscribeToHistory(){
+  if(State.historyUnsub) State.historyUnsub();
+  State.historyUnsub = db.collection("gameHistory")
+    .orderBy("gameId", "desc")
+    .limit(GAME_SETTINGS.historyLimit)
+    .onSnapshot(snap=>{
+      const rows = [];
+      snap.forEach(doc=> rows.push(doc.data()));
+      renderRecentGames(rows);
+    });
+}
+
+/* ================================================================
+   SECTION: BETTING (client actions)
+   ================================================================ */
+function selectSide(side){
+  if(State.currentGame?.phase !== "BETTING") return;
+  State.selectedSide = side;
+  renderBetChoices();
+}
+function selectChip(amount){
+  State.selectedAmount = amount;
+  document.getElementById("customAmount").value = "";
+  renderChips();
+}
+
+async function confirmBet(){
+  const side = State.selectedSide;
+  const customVal = parseInt(document.getElementById("customAmount").value, 10);
+  const amount = customVal > 0 ? customVal : State.selectedAmount;
+
+  if(!side){ showToast("PLAYER / BANKER / TIE 중 하나를 선택하세요."); return; }
+  if(!amount || amount < GAME_SETTINGS.minBet){ showToast(`최소 베팅 금액은 ${formatPoints(GAME_SETTINGS.minBet)} P 입니다.`); return; }
+  if(amount > GAME_SETTINGS.maxBet){ showToast(`최대 베팅 금액은 ${formatPoints(GAME_SETTINGS.maxBet)} P 입니다.`); return; }
+  if(State.currentGame?.phase !== "BETTING"){ showToast("베팅 시간이 아닙니다."); return; }
+  if(amount > State.balance){ showToast("잔액이 부족합니다."); return; }
+
+  const gameId = State.currentGame.gameId;
+  const uid = State.uid;
+
+  try{
+    await db.runTransaction(async (tx)=>{
+      const gameRef = db.collection("games").doc("current");
+      const userRef = db.collection("users").doc(uid);
+      const betRef = gameRef.collection("bets").doc(uid);
+
+      const gameSnap = await tx.get(gameRef);
+      const userSnap = await tx.get(userRef);
+      const betSnap = await tx.get(betRef);
+
+      const g = gameSnap.data();
+      if(!g || g.phase !== "BETTING" || g.gameId !== gameId){
+        throw new Error("베팅 시간이 종료되었습니다.");
+      }
+      if(betSnap.exists){
+        throw new Error("이번 라운드에는 이미 베팅했습니다.");
+      }
+
+      const user = userSnap.data();
+      const balance = user.availableBalance ?? user.balance ?? 0;
+      if(amount > balance){
+        throw new Error("잔액이 부족합니다.");
+      }
+
+      const newBalance = balance - amount;
+      tx.update(userRef, {
+        balance: newBalance,
+        availableBalance: newBalance,
+        totalBets: (user.totalBets || 0) + 1,
+        totalWagered: (user.totalWagered || 0) + amount
+      });
+
+      tx.set(betRef, {
+        uid, side, amount, gameId,
+        settled: false,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      const sideField = side === "PLAYER" ? "playerTotalBet" : side === "BANKER" ? "bankerTotalBet" : "tieTotalBet";
+      tx.update(gameRef, { [sideField]: (g[sideField] || 0) + amount });
+
+      const txnRef = db.collection("transactions").doc();
+      tx.set(txnRef, {
+        uid, type: "BET", amount: -amount,
+        balanceBefore: balance, balanceAfter: newBalance,
+        gameId, side,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    });
+
+    showToast(`${side}에 ${formatPoints(amount)} P 베팅했습니다.`);
+    State.selectedSide = null;
+    State.selectedAmount = null;
+    document.getElementById("customAmount").value = "";
+    renderBetChoices();
+    renderChips();
+  }catch(err){
+    console.error(err);
+    showToast(err.message || "베팅에 실패했습니다.");
+  }
+}
+
+/* ================================================================
+   SECTION: UI — RENDERING
+   ================================================================ */
+function renderBalance(){
+  document.getElementById("balanceValue").innerHTML = `${formatPoints(State.balance)} <span class="unit">P</span>`;
+}
+
+function renderOnlineCount(){
+  document.getElementById("onlineCount").textContent = `${State.onlineCount} ONLINE`;
+  document.getElementById("onlineDot").classList.toggle("offline", State.onlineCount <= 0);
+}
+
+function buildCardFace(cardId){
+  const rank = cardRank(cardId);
+  const suit = cardSuit(cardId);
+  const isRed = suit === "H" || suit === "D";
+  const suitGlyph = { S:"♠", H:"♥", D:"♦", C:"♣" }[suit];
+  const imgSrc = CARD_IMAGES[cardId];
+
+  const wrap = document.createElement("div");
+  wrap.className = "playing-card revealed";
+  wrap.innerHTML = `
+    <div class="playing-card-inner">
+      <div class="card-face card-back"></div>
+      <div class="card-face card-front fallback">
+        <span class="rank">${rank}</span>
+        <span class="suit ${isRed ? "suit-red" : "suit-black"}">${suitGlyph}</span>
+      </div>
+    </div>`;
+
+  if(imgSrc){
+    const img = new Image();
+    img.onload = ()=>{
+      const front = wrap.querySelector(".card-front");
+      front.classList.remove("fallback");
+      front.innerHTML = "";
+      front.appendChild(img);
+    };
+    img.onerror = ()=>{ /* fallback 유지 */ };
+    img.src = imgSrc;
+    img.alt = cardId;
+  }
+  return wrap;
+}
+
+function buildCardBack(){
+  const wrap = document.createElement("div");
+  wrap.className = "playing-card";
+  wrap.innerHTML = `
+    <div class="playing-card-inner">
+      <div class="card-face card-back"></div>
+      <div class="card-face card-front fallback"></div>
+    </div>`;
+  return wrap;
+}
+
+function renderHand(containerId, cards, phase, expectedCount){
+  const el = document.getElementById(containerId);
+  el.innerHTML = "";
+  const showCards = (phase === "DEALING" || phase === "RESULT") && cards && cards.length;
+
+  if(showCards){
+    cards.forEach((c, idx)=>{
+      const cardEl = buildCardFace(c);
+      cardEl.classList.remove("revealed");
+      el.appendChild(cardEl);
+      setTimeout(()=> cardEl.classList.add("revealed"), 80 * idx);
+    });
+  }else{
+    const count = expectedCount || 2;
+    for(let i=0;i<count;i++){
+      const ph = document.createElement("div");
+      ph.className = "card-placeholder";
+      el.appendChild(ph);
+    }
+  }
+}
+
+function renderScores(g){
+  const pEl = document.getElementById("playerScore");
+  const bEl = document.getElementById("bankerScore");
+  if((g.phase === "DEALING" || g.phase === "RESULT") && g.playerScore !== null){
+    pEl.textContent = g.playerScore;
+    bEl.textContent = g.bankerScore;
+  }else{
+    pEl.innerHTML = `<span class="score-placeholder">–</span>`;
+    bEl.innerHTML = `<span class="score-placeholder">–</span>`;
+  }
+}
+
+function renderPhase(g){
+  const label = document.getElementById("phaseLabel");
+  const map = {
+    BETTING: ["BETTING", "is-betting"],
+    BETTING_CLOSED: ["BETTING CLOSED", "is-closed"],
+    DEALING: ["DEALING", "is-dealing"],
+    RESULT: ["RESULT", "is-result"]
+  };
+  const [text, cls] = map[g.phase] || ["–", ""];
+  label.textContent = text;
+  label.className = "phase-label " + cls;
+
+  document.getElementById("gameIdLabel").textContent = "#" + String(g.gameId).padStart(6, "0");
+}
+
+function renderResultBanner(g){
+  const banner = document.getElementById("resultBanner");
+  const labelEl = document.getElementById("resultLabel");
+  const naturalEl = document.getElementById("resultNatural");
+
+  if(g.phase === "RESULT" && g.result){
+    labelEl.textContent = `${g.result} WIN` + (g.result === "TIE" ? "" : "");
+    labelEl.className = "label " + g.result.toLowerCase();
+    naturalEl.style.display = g.isNatural ? "block" : "none";
+    banner.classList.add("show");
+  }else{
+    banner.classList.remove("show");
+  }
+}
+
+function renderBetTotals(g){
+  document.getElementById("totalPlayer").textContent = formatPoints(g.playerTotalBet) + " P";
+  document.getElementById("totalBanker").textContent = formatPoints(g.bankerTotalBet) + " P";
+  document.getElementById("totalTie").textContent = formatPoints(g.tieTotalBet) + " P";
+}
+
+function renderBettingPanel(g){
+  const isBetting = g.phase === "BETTING";
+  document.querySelectorAll(".bet-choice").forEach(btn=> btn.disabled = !isBetting);
+  document.querySelectorAll(".chip").forEach(btn=> btn.disabled = !isBetting);
+  document.getElementById("customAmount").disabled = !isBetting;
+  document.getElementById("confirmBtn").disabled = !isBetting || !!State.myBet;
+  document.getElementById("closedNote").style.display = isBetting ? "none" : "block";
+  document.getElementById("bettingPanel").style.opacity = isBetting ? "1" : "0.7";
+}
+
+function renderBetChoices(){
+  document.querySelectorAll(".bet-choice").forEach(btn=>{
+    btn.classList.toggle("selected", btn.dataset.side === State.selectedSide);
+  });
+}
+function renderChips(){
+  document.querySelectorAll(".chip").forEach(btn=>{
+    btn.classList.toggle("selected", Number(btn.dataset.amount) === State.selectedAmount);
+  });
+}
+
+function renderMyBet(){
+  const row = document.getElementById("myBetRow");
+  const side = document.getElementById("sideMyBet");
+  if(State.myBet){
+    const text = `내 베팅: <span class="amt">${State.myBet.side} ${formatPoints(State.myBet.amount)} P</span>`;
+    row.innerHTML = text;
+    side.innerHTML = text;
+  }else{
+    row.innerHTML = "";
+    side.textContent = "이번 라운드에 베팅하지 않았습니다";
+  }
+  const g = State.currentGame;
+  if(g) document.getElementById("confirmBtn").disabled = g.phase !== "BETTING" || !!State.myBet;
+}
+
+function renderRecentGames(rows){
+  const html = rows.length
+    ? rows.map(r=>{
+        const id = "#" + String(r.gameId).padStart(6,"0");
+        return `<div class="recent-row"><span class="rid">${id}</span><span class="rres ${r.result.toLowerCase()}">${r.result}</span></div>`;
+      }).join("")
+    : `<div class="recent-empty">아직 게임 기록이 없습니다</div>`;
+  document.getElementById("recentList").innerHTML = html;
+  document.getElementById("recentListDesktop").innerHTML = html;
+}
+
+let countdownRAF = null;
+function renderGame(){
+  const g = State.currentGame;
+  if(!g) return;
+
+  renderPhase(g);
+  renderHand("playerCards", g.playerCards, g.phase, 2);
+  renderHand("bankerCards", g.bankerCards, g.phase, 2);
+  renderScores(g);
+  renderResultBanner(g);
+  renderBetTotals(g);
+  renderBettingPanel(g);
+
+  if(g.gameId !== State.lastRenderedGameId){
+    State.selectedSide = null;
+    State.selectedAmount = null;
+    document.getElementById("customAmount").value = "";
+    renderBetChoices();
+    renderChips();
+    State.lastRenderedGameId = g.gameId;
+  }
+
+  startCountdownLoop();
+}
+
+function currentPhaseDeadline(g){
+  if(g.phase === "BETTING") return g.bettingEndsAt;
+  if(g.phase === "BETTING_CLOSED") return g.dealingStartsAt;
+  if(g.phase === "DEALING") return g.dealingEndsAt;
+  if(g.phase === "RESULT") return g.resultEndsAt;
+  return nowMs();
+}
+
+function startCountdownLoop(){
+  if(countdownRAF) cancelAnimationFrame(countdownRAF);
+  function tick(){
+    const g = State.currentGame;
+    if(g){
+      const deadline = currentPhaseDeadline(g);
+      const remainMs = Math.max(0, deadline - nowMs());
+      const s = Math.ceil(remainMs / 1000);
+      document.getElementById("countdownLabel").textContent =
+        `${pad2(Math.floor(s/60))}:${pad2(s%60)}`;
+    }
+    countdownRAF = requestAnimationFrame(tick);
+  }
+  tick();
+}
+
+/* ================================================================
+   SECTION: UI — STATIC SETUP (chips, side buttons, nav)
+   ================================================================ */
+function buildChipRow(){
+  const row = document.getElementById("chipRow");
+  row.innerHTML = "";
+  GAME_SETTINGS.chipValues.forEach(v=>{
+    const btn = document.createElement("button");
+    btn.className = "chip";
+    btn.dataset.amount = v;
+    btn.textContent = formatPoints(v);
+    btn.addEventListener("click", ()=> selectChip(v));
+    row.appendChild(btn);
+  });
+}
+
+function bindStaticEvents(){
+  document.querySelectorAll(".bet-choice").forEach(btn=>{
+    btn.addEventListener("click", ()=> selectSide(btn.dataset.side));
+  });
+  document.getElementById("confirmBtn").addEventListener("click", confirmBet);
+  document.getElementById("customAmount").addEventListener("input", ()=>{
+    State.selectedAmount = null;
+    renderChips();
+  });
+
+  document.querySelectorAll(".nav-item").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      document.querySelectorAll(".nav-item").forEach(b=> b.classList.remove("active"));
+      btn.classList.add("active");
+      document.querySelectorAll(".view").forEach(v=> v.classList.remove("active"));
+      document.getElementById("view-" + btn.dataset.view).classList.add("active");
+    });
+  });
+}
+
+/* ================================================================
+   SECTION: BOOTSTRAP
+   ================================================================ */
+function boot(){
+  buildChipRow();
+  bindStaticEvents();
+
+  const ok = initFirebase();
+  if(!ok){
+    // Firebase 미설정 상태에서도 UI 레이아웃 확인이 가능하도록 정지 상태로 둔다.
+    renderOnlineCount();
+    return;
+  }
+
+  initAuth();
+
+  auth.onAuthStateChanged(user=>{
+    if(!user) return;
+    subscribeToGame();
+    subscribeToMyBet();
+    subscribeToHistory();
+  });
+}
+
+document.addEventListener("DOMContentLoaded", boot);
+</script>
+</body>
+</html>
