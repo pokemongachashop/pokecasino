@@ -1861,9 +1861,11 @@ async function confirmBet(){
       if(!g || g.phase !== "BETTING" || g.gameId !== gameId){
         throw new Error("베팅 시간이 종료되었습니다.");
       }
-      if(betSnap.exists){
+      if(betSnap.exists && betSnap.data().gameId === gameId){
         throw new Error("이번 라운드에는 이미 베팅했습니다.");
       }
+      // betSnap이 존재하지만 이전 라운드(gameId가 다름)의 정산 완료된
+      // 문서라면 이번 tx.set()이 그대로 덮어써서 새 베팅으로 대체한다.
 
       const user = userSnap.data();
       const balance = user.availableBalance ?? user.balance ?? 0;
@@ -2039,7 +2041,7 @@ function renderBettingPanel(g){
   document.querySelectorAll(".bet-choice").forEach(btn=> btn.disabled = !isBetting);
   document.querySelectorAll(".chip").forEach(btn=> btn.disabled = !isBetting);
   document.getElementById("customAmount").disabled = !isBetting;
-  document.getElementById("confirmBtn").disabled = !isBetting || !!State.myBet;
+  document.getElementById("confirmBtn").disabled = !isBetting || myBetIsForCurrentGame();
   document.getElementById("closedNote").style.display = isBetting ? "none" : "block";
   document.getElementById("bettingPanel").style.opacity = isBetting ? "1" : "0.7";
 }
@@ -2055,10 +2057,18 @@ function renderChips(){
   });
 }
 
+// [버그 수정] 베팅 문서(games/current/bets/{uid})는 유저 UID로 고정된
+// 경로라서, 정산이 끝난 이전 라운드의 문서가 다음 라운드에도 그대로
+// 남아있을 수 있다. State.myBet의 gameId가 현재 게임과 다르면 "이번
+// 라운드에는 아직 베팅하지 않은 것"으로 취급한다.
+function myBetIsForCurrentGame(){
+  return !!(State.myBet && State.currentGame && State.myBet.gameId === State.currentGame.gameId);
+}
+
 function renderMyBet(){
   const row = document.getElementById("myBetRow");
   const side = document.getElementById("sideMyBet");
-  if(State.myBet){
+  if(myBetIsForCurrentGame()){
     const text = `내 베팅: <span class="amt">${SIDE_LABEL_KO[State.myBet.side] || State.myBet.side} ${formatPoints(State.myBet.amount)} P</span>`;
     row.innerHTML = text;
     side.innerHTML = text;
@@ -2067,7 +2077,7 @@ function renderMyBet(){
     side.textContent = "이번 라운드에 베팅하지 않았습니다";
   }
   const g = State.currentGame;
-  if(g) document.getElementById("confirmBtn").disabled = g.phase !== "BETTING" || !!State.myBet;
+  if(g) document.getElementById("confirmBtn").disabled = g.phase !== "BETTING" || myBetIsForCurrentGame();
 }
 
 function renderRecentGames(rows){
@@ -2426,6 +2436,17 @@ async function processDepositRequest(requestId, decision){
       const reqData = reqSnap.data();
       if(!reqData || reqData.status !== "PENDING") return; // 중복 처리 방지
 
+      // [버그 수정] Firestore 트랜잭션은 모든 읽기가 쓰기보다 먼저 실행돼야
+      // 한다. 기존 코드는 reqRef를 먼저 업데이트한 뒤 userRef를 읽어서
+      // "읽기가 쓰기보다 늦게 실행됨" 에러로 트랜잭션이 항상 실패했다.
+      // 승인(APPROVED)에 필요한 유저 문서 읽기를 먼저 모두 끝낸 뒤 쓴다.
+      let userRef = null, user = null;
+      if(decision === "APPROVED"){
+        userRef = db.collection("users").doc(reqData.uid);
+        const userSnap = await tx.get(userRef);
+        user = userSnap.data();
+      }
+
       tx.update(reqRef, {
         status: decision,
         processedAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -2433,9 +2454,6 @@ async function processDepositRequest(requestId, decision){
       });
 
       if(decision === "APPROVED"){
-        const userRef = db.collection("users").doc(reqData.uid);
-        const userSnap = await tx.get(userRef);
-        const user = userSnap.data();
         const before = user.availableBalance ?? user.balance ?? 0;
         const after = before + reqData.amount;
         tx.update(userRef, { balance: after, availableBalance: after });
