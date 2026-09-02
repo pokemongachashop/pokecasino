@@ -876,6 +876,16 @@ main{
 .admin-btn.approve{color:var(--win); border-color:rgba(95,174,130,0.35);}
 .admin-btn.reject{color:var(--loss); border-color:rgba(176,101,95,0.35);}
 .admin-btn:hover{filter:brightness(1.15);}
+.admin-adjust-input{
+  width:86px;
+  background:var(--bg-elevated);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  color:var(--text);
+  padding:5px 8px;
+  font-size:12px;
+}
+.admin-adjust-input:focus{outline:none; border-color:var(--accent-dim);}
 .admin-empty{color:var(--text-faint); font-size:12.5px; padding:16px 4px;}
 .admin-table-wrap{overflow-x:auto;}
 
@@ -1160,7 +1170,7 @@ main{
           <div id="adminTabUsers" style="display:none;">
             <div class="admin-table-wrap">
               <table class="admin-table">
-                <thead><tr><th>이름</th><th>UID</th><th>잔액</th><th>베팅액</th><th>수익</th></tr></thead>
+                <thead><tr><th>이름</th><th>UID</th><th>잔액</th><th>베팅액</th><th>수익</th><th>잔액 조정</th></tr></thead>
                 <tbody id="adminUsersBody"></tbody>
               </table>
             </div>
@@ -2289,7 +2299,7 @@ function renderRequestList(containerId, rows){
 function renderTxList(rows){
   const el = document.getElementById("txHistoryList");
   if(!rows.length){ el.innerHTML = `<div class="admin-empty">거래 내역이 없습니다</div>`; return; }
-  const typeLabel = { BET:"베팅", GAME_SETTLEMENT:"정산", DEPOSIT:"충전", WITHDRAW:"환전" };
+  const typeLabel = { BET:"베팅", GAME_SETTLEMENT:"정산", DEPOSIT:"충전", WITHDRAW:"환전", ADMIN_ADJUST:"관리자 조정" };
   el.innerHTML = rows.map(t=>{
     const pos = t.amount >= 0;
     return `
@@ -2579,7 +2589,7 @@ async function processWithdrawRequest(requestId, decision){
 
 function renderAdminUsers(rows){
   const body = document.getElementById("adminUsersBody");
-  if(!rows.length){ body.innerHTML = `<tr><td colspan="5" class="admin-empty">사용자가 없습니다</td></tr>`; return; }
+  if(!rows.length){ body.innerHTML = `<tr><td colspan="6" class="admin-empty">사용자가 없습니다</td></tr>`; return; }
   body.innerHTML = rows.map(u=>`
     <tr>
       <td>${u.displayName || "–"}</td>
@@ -2587,8 +2597,56 @@ function renderAdminUsers(rows){
       <td class="num">${formatPoints(u.availableBalance ?? u.balance ?? 0)} P</td>
       <td class="num">${formatPoints(u.totalWagered || 0)} P</td>
       <td class="num">${formatPoints(u.totalProfit || 0)} P</td>
+      <td>
+        <div class="admin-actions">
+          <input type="number" class="admin-adjust-input" id="adjustInput-${u.id}" min="1" step="100" placeholder="금액">
+          <button class="admin-btn approve" data-adjust-add="${u.id}">지급</button>
+          <button class="admin-btn reject" data-adjust-sub="${u.id}">차감</button>
+        </div>
+      </td>
     </tr>
   `).join("");
+
+  body.querySelectorAll("[data-adjust-add]").forEach(btn=>
+    btn.addEventListener("click", ()=> adjustUserBalance(btn.dataset.adjustAdd, 1)));
+  body.querySelectorAll("[data-adjust-sub]").forEach(btn=>
+    btn.addEventListener("click", ()=> adjustUserBalance(btn.dataset.adjustSub, -1)));
+}
+
+// 관리자가 유저 잔액을 직접 지급/차감한다. Discord 등에서 별도 조정이
+// 필요할 때 사용하며, 거래 내역(transactions)에 ADMIN_ADJUST로 기록되어
+// 해당 유저의 지갑 > 거래 내역에도 표시된다.
+async function adjustUserBalance(uid, sign){
+  const input = document.getElementById(`adjustInput-${uid}`);
+  const raw = parseInt(input.value, 10);
+  if(!raw || raw <= 0){ showToast("올바른 금액을 입력하세요."); return; }
+  const amount = raw * sign;
+
+  try{
+    await db.runTransaction(async (tx)=>{
+      const userRef = db.collection("users").doc(uid);
+      const userSnap = await tx.get(userRef);
+      const user = userSnap.data();
+      const before = user.availableBalance ?? user.balance ?? 0;
+      const after = before + amount;
+      if(after < 0) throw new Error("잔액이 0보다 작아질 수 없습니다.");
+
+      tx.update(userRef, { balance: after, availableBalance: after });
+
+      const txnRef = db.collection("transactions").doc();
+      tx.set(txnRef, {
+        uid, type: "ADMIN_ADJUST", amount,
+        balanceBefore: before, balanceAfter: after,
+        adjustedBy: State.uid,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    });
+    input.value = "";
+    showToast(sign > 0 ? "잔액을 지급했습니다." : "잔액을 차감했습니다.");
+  }catch(err){
+    console.error(err);
+    showToast(err.message || "처리에 실패했습니다.");
+  }
 }
 
 function renderAdminGames(rows){
