@@ -1786,8 +1786,8 @@ async function advanceGameIfNeeded(){
         tx.update(ref, { phase: "RESULT", updatedAt: nowMs() });
       });
       // 정산은 별도 함수에서, 결과가 이미 기록된 후 한 번만 수행
-      await settleGameIfNeeded(g);
-    }else if(g.phase === "RESULT" && now >= g.resultEndsAt){
+// 정산 시도 — 실제 정산 여부는 trySettleMyBet 내부에서 최신 상태로 재확인
+      await trySettleMyBet();    }else if(g.phase === "RESULT" && now >= g.resultEndsAt){
       await db.runTransaction(async (tx)=>{
         const ref = db.collection("games").doc("current");
         const snap = await tx.get(ref);
@@ -1809,36 +1809,55 @@ async function advanceGameIfNeeded(){
 }
 
 // 라운드 결과에 따른 지급/기록. gameId + "settled" 플래그로 중복 정산을 방지.
-async function settleGameIfNeeded(g){
-  if(!State.uid) return;
-  const myBetRef = db.collection("games").doc("current").collection("bets").doc(State.uid);
-
+// [수정] 기존 settleGameIfNeeded(g)는 DEALING→RESULT 전환 "그 순간"에만
+// 호출되어, 그 시점에 브라우저가 열려있지 않은 유저는 영원히 정산을
+// 받지 못하는 버그가 있었다. trySettleMyBet()은 언제 호출되든(게임
+// 스냅샷 갱신, 내 베팅 스냅샷 갱신, 진행 루프 등) 항상 최신 상태를
+// 다시 확인해서 안전하게 정산을 시도한다. games/current가 이미 다음
+// 라운드로 넘어갔다면 gameHistory에서 결과를 찾아 정산한다.
+let settleInFlight = false;
+async function trySettleMyBet(){
+  if(!firebaseReady || !State.uid) return;
+  if(settleInFlight) return;
+  settleInFlight = true;
   try{
-    await db.runTransaction(async (tx)=>{
-      const gameRef = db.collection("games").doc("current");
-      const gameSnap = await tx.get(gameRef);
-      const cur = gameSnap.data();
-      if(!cur || cur.gameId !== g.gameId || !cur.result) return;
+    const myBetRef = db.collection("games").doc("current").collection("bets").doc(State.uid);
 
+    await db.runTransaction(async (tx)=>{
       const betSnap = await tx.get(myBetRef);
       if(!betSnap.exists) return;
       const bet = betSnap.data();
-      if(bet.settled) return; // 이미 정산됨 — 중복 처리 방지
+      if(bet.settled) return; // 이미 정산됨
 
-      const payout = calculatePayout(bet.side, bet.amount, cur.result);
+      const gameRef = db.collection("games").doc("current");
+      const gameSnap = await tx.get(gameRef);
+      const liveGame = gameSnap.data();
+
+      let result = null;
+      if(liveGame && liveGame.gameId === bet.gameId && liveGame.result){
+        result = liveGame.result; // 아직 같은 라운드
+      }else{
+        // 이미 다음 라운드로 넘어갔다면 아카이브된 결과를 사용
+        const historyRef = db.collection("gameHistory").doc(String(bet.gameId));
+        const historySnap = await tx.get(historyRef);
+        if(historySnap.exists) result = historySnap.data().result;
+      }
+
+      if(!result) return; // 아직 결과 없음 — 다음 기회에 재시도
+
       const userRef = db.collection("users").doc(State.uid);
       const userSnap = await tx.get(userRef);
       const user = userSnap.data();
 
+      const payout = calculatePayout(bet.side, bet.amount, result);
       const balanceBefore = user.availableBalance ?? user.balance ?? 0;
       const balanceAfter = balanceBefore + payout;
       const profitDelta = payout - bet.amount;
 
-      const streakWon = bet.side === cur.result;
+      const streakWon = bet.side === result;
       const newStreak = streakWon ? (user.currentStreak || 0) + 1 : 0;
       const newBest = Math.max(user.bestStreak || 0, newStreak);
-
-      const winField = cur.result === "PLAYER" ? "playerWins" : cur.result === "BANKER" ? "bankerWins" : "tieWins";
+      const winField = result === "PLAYER" ? "playerWins" : result === "BANKER" ? "bankerWins" : "tieWins";
 
       tx.update(userRef, {
         balance: balanceAfter,
@@ -1849,7 +1868,7 @@ async function settleGameIfNeeded(g){
         [winField]: (user[winField] || 0) + (streakWon ? 1 : 0)
       });
 
-      tx.update(myBetRef, { settled: true, payout, result: cur.result });
+      tx.update(myBetRef, { settled: true, payout, result });
 
       const txnRef = db.collection("transactions").doc();
       tx.set(txnRef, {
@@ -1858,14 +1877,16 @@ async function settleGameIfNeeded(g){
         amount: profitDelta,
         balanceBefore,
         balanceAfter,
-        gameId: cur.gameId,
+        gameId: bet.gameId,
         side: bet.side,
-        result: cur.result,
+        result,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
     });
   }catch(err){
-    console.error("settleGameIfNeeded failed:", err);
+    console.error("trySettleMyBet failed:", err);
+  }finally{
+    settleInFlight = false;
   }
 }
 
@@ -1902,7 +1923,17 @@ function subscribeToGame(){
     }
     State.currentGame = snap.data();
     renderGame();
-    scheduleAdvanceCheck(150); // 상태가 바뀔 때마다 다음 전환이 필요한지 재검사
+function subscribeToGame(){
+  if(State.gameUnsub) State.gameUnsub();
+  State.gameUnsub = db.collection("games").doc("current").onSnapshot(snap=>{
+    if(!snap.exists){
+      State.currentGame = null;
+      return;
+    }
+    State.currentGame = snap.data();
+    renderGame();
+    trySettleMyBet(); // [추가] 게임 상태가 바뀔 때마다 정산 필요 여부 재확인
+    scheduleAdvanceCheck(150);
   });
 }
 
@@ -1913,6 +1944,14 @@ function subscribeToMyBet(){
     .onSnapshot(snap=>{
       State.myBet = snap.exists ? snap.data() : null;
       renderMyBet();
+function subscribeToMyBet(){
+  if(!State.uid) return;
+  if(State.betUnsub) State.betUnsub();
+  State.betUnsub = db.collection("games").doc("current").collection("bets").doc(State.uid)
+    .onSnapshot(snap=>{
+      State.myBet = snap.exists ? snap.data() : null;
+      renderMyBet();
+      trySettleMyBet(); // [추가] 베팅 문서 갱신 때마다 정산 필요 여부 재확인
     });
 }
 
