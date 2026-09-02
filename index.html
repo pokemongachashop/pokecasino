@@ -45,6 +45,86 @@
   --font-body:'Inter', sans-serif;
 }
 
+/* ============================================================
+   LIGHT THEME (파스텔 포켓몬 테마)
+   :root 위에 data-theme="light" 속성을 주면 아래 값으로 덮어씌워진다.
+   ============================================================ */
+:root[data-theme="light"]{
+  --bg:#FFF6E9;
+  --bg-elevated:#FFFFFF;
+  --surface:#FFFCF6;
+  --surface-2:#FFEFD6;
+  --border:#F3D9AE;
+  --border-soft:#F8E7C8;
+  --text:#4A3B2A;
+  --text-dim:#8C7A63;
+  --text-faint:#C3AE8E;
+
+  --accent:#F2A93C;       /* 피카츄 옐로/오렌지 */
+  --accent-dim:#D98F26;
+  --accent-soft:rgba(242,169,60,0.16);
+
+  --player:#6FAEE0;       /* 파스텔 스카이블루 */
+  --player-soft:rgba(111,174,224,0.18);
+  --banker:#F08FA0;       /* 파스텔 코럴핑크 */
+  --banker-soft:rgba(240,143,160,0.18);
+  --tie:#7FCB9B;          /* 파스텔 민트그린 */
+  --tie-soft:rgba(127,203,155,0.18);
+
+  --win:#5FB37F;
+  --loss:#E5787A;
+}
+:root[data-theme="light"] .app-header{
+  background:rgba(255,246,233,0.92);
+}
+:root[data-theme="light"] .table-wrap{
+  background:radial-gradient(120% 100% at 50% 0%, #FFF1DC 0%, #FFE7C2 70%);
+}
+:root[data-theme="light"] .table-wrap::before{
+  background:radial-gradient(60% 40% at 50% 0%, rgba(242,169,60,0.10), transparent 70%);
+}
+:root[data-theme="light"] .card-back{
+  background:linear-gradient(155deg, #FFE7C2 0%, #FFF6E9 100%);
+}
+:root[data-theme="light"] .confirm-btn,
+:root[data-theme="light"] .submit-btn{
+  color:#4A3B2A;
+}
+
+/* ============================================================
+   THEME TOGGLE SWITCH
+   ============================================================ */
+.theme-toggle{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.theme-toggle-btn{
+  position:relative;
+  width:44px;
+  height:24px;
+  border-radius:20px;
+  border:1px solid var(--border);
+  background:var(--bg-elevated);
+  padding:2px;
+  transition:background .2s ease, border-color .2s ease;
+}
+.theme-toggle-btn .knob{
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  background:var(--accent);
+  transform:translateX(0);
+  transition:transform .2s cubic-bezier(.2,.7,.3,1), background .2s ease;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:10px;
+}
+:root[data-theme="light"] .theme-toggle-btn .knob{
+  transform:translateX(20px);
+}
+
 *{box-sizing:border-box; margin:0; padding:0;}
 html,body{height:100%;}
 body{
@@ -923,6 +1003,11 @@ main{
       <span class="brand-sub" id="tableLabel">테이블 01</span>
     </div>
     <div class="header-right">
+      <div class="theme-toggle">
+        <button class="theme-toggle-btn" id="themeToggleBtn" type="button" aria-label="테마 전환" title="다크 / 라이트 테마 전환">
+          <span class="knob" id="themeToggleKnob">🌙</span>
+        </button>
+      </div>
       <div class="online-pill">
         <span class="online-dot" id="onlineDot"></span>
         <span id="onlineCount">–</span>
@@ -962,13 +1047,13 @@ main{
         <div class="table-wrap">
           <div class="hands">
             <div class="hand">
-              <span class="hand-label player">플레이어</span>
+              <span class="hand-label player">1팀</span>
               <div class="card-row" id="playerCards"></div>
               <div class="score player" id="playerScore"><span class="score-placeholder">–</span></div>
             </div>
             <div class="vs-divider">VS</div>
             <div class="hand">
-              <span class="hand-label banker">뱅커</span>
+              <span class="hand-label banker">2팀</span>
               <div class="card-row" id="bankerCards"></div>
               <div class="score banker" id="bankerScore"><span class="score-placeholder">–</span></div>
             </div>
@@ -981,15 +1066,15 @@ main{
 
           <div class="bet-totals">
             <div class="bet-total-cell player">
-              <div class="k">플레이어</div>
+              <div class="k">1팀</div>
               <div class="v num" id="totalPlayer">0 P</div>
             </div>
             <div class="bet-total-cell banker">
-              <div class="k">뱅커</div>
+              <div class="k">2팀</div>
               <div class="v num" id="totalBanker">0 P</div>
             </div>
             <div class="bet-total-cell tie">
-              <div class="k">타이</div>
+              <div class="k">무승부</div>
               <div class="v num" id="totalTie">0 P</div>
             </div>
           </div>
@@ -1001,15 +1086,15 @@ main{
 
         <div class="bet-choices">
           <button class="bet-choice player" data-side="PLAYER">
-            <div class="name">플레이어</div>
+            <div class="name">1팀</div>
             <div class="payout" id="payoutPlayer">1 : 1</div>
           </button>
           <button class="bet-choice banker" data-side="BANKER">
-            <div class="name">뱅커</div>
+            <div class="name">2팀</div>
             <div class="payout" id="payoutBanker">1 : 1</div>
           </button>
           <button class="bet-choice tie" data-side="TIE">
-            <div class="name">타이</div>
+            <div class="name">무승부</div>
             <div class="payout" id="payoutTie">8 : 1</div>
           </button>
         </div>
@@ -1116,9 +1201,9 @@ main{
           <div class="stat-cell"><div class="k">잔액</div><div class="v num" id="statBalance">0 P</div></div>
           <div class="stat-cell"><div class="k">총 베팅 횟수</div><div class="v num" id="statTotalBets">0</div></div>
           <div class="stat-cell"><div class="k">총 베팅 금액</div><div class="v num" id="statWagered">0 P</div></div>
-          <div class="stat-cell"><div class="k">플레이어 승</div><div class="v num" id="statPlayerWins">0</div></div>
-          <div class="stat-cell"><div class="k">뱅커 승</div><div class="v num" id="statBankerWins">0</div></div>
-          <div class="stat-cell"><div class="k">타이 승</div><div class="v num" id="statTieWins">0</div></div>
+          <div class="stat-cell"><div class="k">1팀 승</div><div class="v num" id="statPlayerWins">0</div></div>
+          <div class="stat-cell"><div class="k">2팀 승</div><div class="v num" id="statBankerWins">0</div></div>
+          <div class="stat-cell"><div class="k">무승부</div><div class="v num" id="statTieWins">0</div></div>
           <div class="stat-cell"><div class="k">총 수익</div><div class="v num" id="statProfit">0 P</div></div>
           <div class="stat-cell"><div class="k">현재 연승</div><div class="v num" id="statStreak">0</div></div>
           <div class="stat-cell"><div class="k">최고 연승</div><div class="v num" id="statBestStreak">0</div></div>
@@ -1179,7 +1264,7 @@ main{
           <div id="adminTabGames" style="display:none;">
             <div class="admin-table-wrap">
               <table class="admin-table">
-                <thead><tr><th>게임</th><th>플레이어</th><th>뱅커</th><th>결과</th></tr></thead>
+                <thead><tr><th>게임</th><th>1팀</th><th>2팀</th><th>결과</th></tr></thead>
                 <tbody id="adminGamesBody"></tbody>
               </table>
             </div>
@@ -1339,7 +1424,7 @@ const State = {
 
 // 내부 데이터 값(PLAYER/BANKER/TIE, 상태 코드 등)은 영어 그대로 유지하고,
 // 화면에 표시할 때만 한글로 변환한다 (CSS 클래스/DB 값과 분리).
-const SIDE_LABEL_KO = { PLAYER: "플레이어", BANKER: "뱅커", TIE: "타이" };
+const SIDE_LABEL_KO = { PLAYER: "1팀", BANKER: "2팀", TIE: "무승부" };
 const STATUS_LABEL_KO = { PENDING: "대기중", APPROVED: "승인됨", REJECTED: "거절됨", COMPLETED: "완료", PROCESSING: "처리중" };
 const PHASE_LABEL_KO = { BETTING: "베팅", BETTING_CLOSED: "베팅 마감", DEALING: "카드 공개", RESULT: "결과" };
 
@@ -1862,7 +1947,7 @@ async function confirmBet(){
   const customVal = parseInt(document.getElementById("customAmount").value, 10);
   const amount = customVal > 0 ? customVal : State.selectedAmount;
 
-  if(!side){ showToast("PLAYER / BANKER / TIE 중 하나를 선택하세요."); return; }
+  if(!side){ showToast("1팀 / 2팀 / 무승부 중 하나를 선택하세요."); return; }
   if(!amount || amount < GAME_SETTINGS.minBet){ showToast(`최소 베팅 금액은 ${formatPoints(GAME_SETTINGS.minBet)} P 입니다.`); return; }
   if(amount > GAME_SETTINGS.maxBet){ showToast(`최대 베팅 금액은 ${formatPoints(GAME_SETTINGS.maxBet)} P 입니다.`); return; }
   if(State.currentGame?.phase !== "BETTING"){ showToast("베팅 시간이 아닙니다."); return; }
@@ -2063,7 +2148,7 @@ function renderResultBanner(g){
   const naturalEl = document.getElementById("resultNatural");
 
   if(g.phase === "RESULT" && g.result){
-    labelEl.textContent = g.result === "TIE" ? "타이" : `${SIDE_LABEL_KO[g.result]} 승리`;
+    labelEl.textContent = g.result === "TIE" ? "무승부" : `${SIDE_LABEL_KO[g.result]} 승리`;
     labelEl.className = "label " + g.result.toLowerCase();
     naturalEl.style.display = g.isNatural ? "block" : "none";
     banner.classList.add("show");
@@ -2126,7 +2211,7 @@ function renderRecentGames(rows){
   const html = rows.length
     ? rows.map(r=>{
         const id = "#" + String(r.gameId).padStart(6,"0");
-        return `<div class="recent-row"><span class="rid">${id}</span><span class="rres ${r.result.toLowerCase()}">${r.result === "TIE" ? "타이" : SIDE_LABEL_KO[r.result]}</span></div>`;
+        return `<div class="recent-row"><span class="rid">${id}</span><span class="rres ${r.result.toLowerCase()}">${r.result === "TIE" ? "무승부" : SIDE_LABEL_KO[r.result]}</span></div>`;
       }).join("")
     : `<div class="recent-empty">아직 게임 기록이 없습니다</div>`;
   document.getElementById("recentList").innerHTML = html;
@@ -2386,7 +2471,7 @@ function renderMyHistory(rows){
     <div class="history-row">
       <div class="h-left">
         <span class="h-game">게임 #${String(r.gameId).padStart(6,"0")}</span>
-        <span class="h-bet">${SIDE_LABEL_KO[r.side] || r.side} · ${r.result === "TIE" ? "타이" : SIDE_LABEL_KO[r.result]}</span>
+        <span class="h-bet">${SIDE_LABEL_KO[r.side] || r.side} · ${r.result === "TIE" ? "무승부" : SIDE_LABEL_KO[r.result]}</span>
       </div>
       <span class="h-profit num ${profit>=0?"pos":"neg"}">${profit>=0?"+":""}${formatPoints(profit)} P</span>
     </div>`;
@@ -2659,7 +2744,7 @@ function renderAdminGames(rows){
       <td>#${String(g.gameId).padStart(6,"0")}</td>
       <td class="num">${g.playerScore}</td>
       <td class="num">${g.bankerScore}</td>
-      <td>${g.result === "TIE" ? "타이" : SIDE_LABEL_KO[g.result]}${g.isNatural ? " (내추럴)" : ""}</td>
+      <td>${g.result === "TIE" ? "무승부" : SIDE_LABEL_KO[g.result]}${g.isNatural ? " (내추럴)" : ""}</td>
     </tr>
   `).join("");
 }
@@ -2674,9 +2759,9 @@ function renderAdminSettings(){
     <div class="stat-cell"><div class="k">최소 베팅(P)</div><input type="number" id="setMinBet" min="1" step="1" value="${GAME_SETTINGS.minBet}"></div>
     <div class="stat-cell"><div class="k">최대 베팅(P)</div><input type="number" id="setMaxBet" min="1" step="1" value="${GAME_SETTINGS.maxBet}"></div>
     <div class="stat-cell"><div class="k">초기 지급 포인트(P)</div><input type="number" id="setStartingBalance" min="0" step="1" value="${GAME_SETTINGS.startingBalance}"></div>
-    <div class="stat-cell"><div class="k">플레이어 배당 (1:N)</div><input type="number" id="setPlayerPayout" min="0" step="0.1" value="${GAME_SETTINGS.playerPayout}"></div>
-    <div class="stat-cell"><div class="k">뱅커 배당 (1:N)</div><input type="number" id="setBankerPayout" min="0" step="0.1" value="${GAME_SETTINGS.bankerPayout}"></div>
-    <div class="stat-cell"><div class="k">타이 배당 (1:N)</div><input type="number" id="setTiePayout" min="0" step="0.1" value="${GAME_SETTINGS.tiePayout}"></div>
+    <div class="stat-cell"><div class="k">1팀 배당 (1:N)</div><input type="number" id="setPlayerPayout" min="0" step="0.1" value="${GAME_SETTINGS.playerPayout}"></div>
+    <div class="stat-cell"><div class="k">2팀 배당 (1:N)</div><input type="number" id="setBankerPayout" min="0" step="0.1" value="${GAME_SETTINGS.bankerPayout}"></div>
+    <div class="stat-cell"><div class="k">무승부 배당 (1:N)</div><input type="number" id="setTiePayout" min="0" step="0.1" value="${GAME_SETTINGS.tiePayout}"></div>
   `;
 }
 
@@ -2757,7 +2842,31 @@ function buildChipRow(){
   });
 }
 
+/* ================================================================
+   SECTION: THEME (dark / light 파스텔 포켓몬 테마 토글)
+   페이지를 새로고침하면 기본값(다크)으로 돌아간다. 이 세션 동안만
+   유지되는 화면 설정이며 별도로 저장하지 않는다.
+   ================================================================ */
+let currentTheme = "dark";
+function applyTheme(theme){
+  currentTheme = theme;
+  if(theme === "light"){
+    document.documentElement.setAttribute("data-theme", "light");
+    document.getElementById("themeToggleKnob").textContent = "☀️";
+  }else{
+    document.documentElement.removeAttribute("data-theme");
+    document.getElementById("themeToggleKnob").textContent = "🌙";
+  }
+}
+function toggleTheme(){
+  applyTheme(currentTheme === "dark" ? "light" : "dark");
+}
+function bindThemeToggle(){
+  document.getElementById("themeToggleBtn").addEventListener("click", toggleTheme);
+}
+
 function bindStaticEvents(){
+  bindThemeToggle();
   document.querySelectorAll(".bet-choice").forEach(btn=>{
     btn.addEventListener("click", ()=> selectSide(btn.dataset.side));
   });
