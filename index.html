@@ -360,6 +360,14 @@ main{
   border:1px solid rgba(199,164,104,0.35);
   border-radius:4px;
 }
+.card-back.has-image::before{
+  display:none; /* 이미지로 채워지면 CSS 장식은 숨긴다 */
+}
+.card-back img{
+  width:100%; height:100%;
+  object-fit:cover;
+  border-radius:6px;
+}
 .card-front{
   background:var(--surface-2);
   border:1px solid var(--border);
@@ -1222,10 +1230,10 @@ const firebaseConfig = {
 
 const GAME_SETTINGS = {
   gameIntervalSeconds: 60,
-  bettingSeconds: 42,
-  bettingClosedSeconds: 3,   // BETTING -> DEALING buffer
-  dealingSeconds: 0,
-  resultSeconds: 15,
+  bettingSeconds: 40,
+  bettingClosedSeconds: 5,   // BETTING -> DEALING buffer
+  dealingSeconds: 10,
+  resultSeconds: 5,
   minBet: 100,
   maxBet: 10000,
   startingBalance: 10000,
@@ -1250,6 +1258,10 @@ const CARD_IMAGES = {
   "9-S":"assets/cards/9-S.png", "9-H":"assets/cards/9-H.png", "9-D":"assets/cards/9-D.png", "9-C":"assets/cards/9-C.png",
   "10-S":"assets/cards/10-S.png", "10-H":"assets/cards/10-H.png", "10-D":"assets/cards/10-D.png", "10-C":"assets/cards/10-C.png"
 };
+
+// 카드 뒷면(카드백) 이미지. 파일만 교체하면 바로 적용되며, 값을 비우거나
+// 이미지 로딩에 실패하면 기존 CSS 카드백 디자인으로 자동 대체된다.
+const CARD_BACK_IMAGE = "assets/cards/back.png";
 
 const SUITS = ["S","H","D","C"];
 const RANKS = ["A","2","3","4","5","6","7","8","9","10"];
@@ -1923,6 +1935,21 @@ function renderOnlineCount(){
   document.getElementById("onlineDot").classList.toggle("offline", State.onlineCount <= 0);
 }
 
+// 카드 뒷면 요소에 CARD_BACK_IMAGE를 적용한다. 설정이 비어있거나
+// 이미지 로딩에 실패하면 기존 CSS 카드백 디자인이 그대로 유지된다.
+function attachCardBackImage(backEl){
+  if(!CARD_BACK_IMAGE) return;
+  const img = new Image();
+  img.onload = ()=>{
+    backEl.innerHTML = "";
+    backEl.appendChild(img);
+    backEl.classList.add("has-image");
+  };
+  img.onerror = ()=>{ /* CSS fallback 유지 */ };
+  img.src = CARD_BACK_IMAGE;
+  img.alt = "card back";
+}
+
 function buildCardFace(cardId){
   const rank = cardRank(cardId);
   const suit = cardSuit(cardId);
@@ -1940,6 +1967,8 @@ function buildCardFace(cardId){
         <span class="suit ${isRed ? "suit-red" : "suit-black"}">${suitGlyph}</span>
       </div>
     </div>`;
+
+  attachCardBackImage(wrap.querySelector(".card-back"));
 
   if(imgSrc){
     const img = new Image();
@@ -1964,6 +1993,7 @@ function buildCardBack(){
       <div class="card-face card-back"></div>
       <div class="card-face card-front fallback"></div>
     </div>`;
+  attachCardBackImage(wrap.querySelector(".card-back"));
   return wrap;
 }
 
